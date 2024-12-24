@@ -1,0 +1,19 @@
+div{
+    margin: 5px;
+    border: solid red 3px;
+}
+.div50width{
+    float: left;
+    width: calc(50% - 20px);
+    height: 60%;
+}
+.div50height{
+    height: calc(50% - 20px);
+}
+.bottomdiv{
+    float: left;
+    width: calc(100% - 40px);
+    height: 20%;
+}
+
+

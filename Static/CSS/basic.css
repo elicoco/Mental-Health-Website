@@ -1,0 +1,7 @@
+.div50width{
+    float: left;
+    width: 50%;
+    border: solid red 100px;
+    height: 100vh;
+}
+

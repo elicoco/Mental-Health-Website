@@ -1,0 +1,12 @@
+<input type="search" id="search" placeholder="Search" onkeyup="search(this.value)" value=>
+<script>
+function search(searchkey){
+    window.location.href = "/meditation/search/" + searchkey
+}
+</script>
+{% for x in range(meditations|length) %}
+<div>
+    <h3>{{meditations[x].name}}</h3>
+    <h3>Duration: {{(meditations[x].time)/60}} minutes</h3>
+</div>
+{% endfor %}

@@ -1,0 +1,106 @@
+<head>
+    <title>
+    {% block title %} 
+    {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/footer.css') }}">
+    {% block links %}
+    {% endblock %}
+</head>
+<body>
+    <div id="page_container">
+        <div id="header_wrap">
+            <!-- Header -->
+            <div class="leftheader">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"  class="logotop">
+            </div>
+            <!-- Checks if user is logged in 
+        and either displays the user's logo
+        or displays login, with a link to the
+        login page -->
+            {% if loggedin == False %}
+                <a href="{{ url_for('login') }}">
+                    <div class="headerdiv">
+                        <h1 class = "header_title">Login</h1>
+                    </div>
+                </a> 
+            {% else %}
+                <div class="logintopdiv">
+                    <img src="{{ url_for('static', filename='images/Profile_picture_placeholder.png') }}" alt="Logged In" class="profile_pic">
+                </div>
+            {% endif %}
+            <a href="{{ url_for('login') }}">
+                <div class="headerdiv">
+                    <h1 class = "header_title">Daily Tracker</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('journal') }}">
+                <div class="headerdiv">
+                    <h1 class = "header_title">Journals</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('login') }}">
+                <div class="headerdiv">
+                    <h1 class = "header_title">Meditations</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('main') }}">
+                <div class="headerdiv">
+                    <h1 class="header_title">Home</h1>
+                </div>
+            </a>
+        </div>
+        <div id="main_page">
+            {% block main %}
+            {% endblock %}
+            <script src="{{ url_for('static', filename='js/snackbar.js') }}"></script> 
+            {% if snackbar is defined and snackbar.need_snackbar == True %}
+            <script>
+                const snackbar = {
+                    message: "{{ snackbar.message }}",
+                    colour: "{{ snackbar.colour }}"
+                };
+                showSnackbar(snackbar.message, snackbar.colour)
+            </script>
+            {% endif %}
+        </div>
+        <div id="footer_wrap">
+            <!-- Footer -->
+            <a href="{{ url_for('main') }}">
+                <div class="footerdivs">
+                    <h1 class="footer_title">Home</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('login') }}">
+                <div class="footerdivs">
+                    <h1 class = "footer_title">Meditations</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('journal') }}">
+                <div class="footerdivs">
+                    <h1 class = "footer_title">Journals</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('login') }}">
+                <div class="footerdivs">
+                    <h1 class = "footer_title">Daily Tracker</h1>
+                </div>
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <div class="footerdivs">
+                    <h1 class = "footer_title">Logout</h1>
+                </div>
+            </a>
+            <div class="rightfooter">
+                <h4>Contact Support</h4>
+                <p>Email: zenlog.connect@gmail.com</p>
+                <p>Phone No: 07232544654</p>
+            </div>
+            <div class="rightfooter">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="footer_logo">
+            </div>
+        </div>
+    </div>
+</body>

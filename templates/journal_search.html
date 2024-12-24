@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+
+{% block title %}
+Journals
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/journals.css') }}">
+{% endblock %}
+
+
+{% block main %}
+
+<a href="{{ url_for('new_journal') }}">
+    <h2>New Journal</h2>
+</a>
+
+{% for journal in journals %}
+
+<div class="journal-loop">
+    <h1>{{journal.title}}</h1>
+    <p>{{journal.date_created}}</p>
+    <a href="{{ url_for('journal_id', id = journal.id) }}">
+        <h4>Edit Journal</h4>
+    </a>
+</div>
+
+{% endfor %}
+
+{% endblock %}
+
+

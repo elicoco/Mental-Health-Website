@@ -1,0 +1,47 @@
+{% extends "template.html" %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block main %}
+
+<form id = "signup-form" method="post">
+    <br>
+    <label for="username">Username: </label>
+    <input type="text" required name="username" value="{{ info.username }}"/>
+    <br>
+    <br>
+    <label for="firstname">First Name: </label>
+    <input type="firstname" required name="firstname" value="{{ info.first_name }}"/>
+    <br>
+    <br> 
+    <label for="lastname">Last Name: </label>
+    <input type="lastname" required name="lastname" value="{{ info.last_name }}"/>
+    <br>
+    <br> 
+    <label for="email">Email: </label>
+    <input type="email" required name="email" value="{{ info.email }}"/>
+    <br>
+    <br>
+    <label for="password">Password: </label>
+    <input id = "password" type="password" required name="password"/>
+    <br>
+    <br>
+    <label for="re-enter-password">Re-enter Password: </label>
+    <input id = "re-enter-password" type="password" required name="re-enter-password"/>
+    <br>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+<script>
+    orange = "#FBC02D";
+    document.getElementById("signup-form").onsubmit = function(event){
+        if (document.getElementById("password").value != document.getElementById("re-enter-password").value){
+            event.preventDefault();
+            showSnackbar("Passwords Do Not Match", orange);
+        }
+    }
+</script>
+
+{% endblock %}

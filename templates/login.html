@@ -1,0 +1,31 @@
+{% extends "template.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/login.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<form method="post">
+    <br>
+    <label for="username">Username: </label>
+    <input type="text" required name="username" value =  "{{ username }}"/>
+    <br>
+    <br>
+    <label for="password">Password: </label>
+    <input type="password" required name="password"/>
+    <br>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+<a href = "signup" id="signup_button">
+    <h4 id="singup_text">Singup</h4>
+</a>
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "template.html" %}
+
+{% block title %}
+Journals
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/journals.css') }}">
+{% endblock %}
+
+
+{% block main %}
+<input type="hidden" id="journalId" value="{{ journal.id }}">
+<div >
+    <h1 id="journal-title" contenteditable="true">{{journal.title}}</h1>
+    <p id="journal-content" contenteditable="true">{{journal.content}}</p>
+    <div class="buttons">
+        <button id="save-button" onclick="saveJournal()">Save</button>
+        <button id="cancel-button" onclick="cancelEdit()">Cancel</button>
+        <button id="delete-button" onclick="deleteJournal()">Delete</button>
+        <button id="prompt-button" onclick="prompt()">Prompt</button>
+    </div>
+    <p id="journal-date">{{journal.date_created}}</p>
+</div>
+
+<script src="{{ url_for('static', filename='js/journal-post.js') }}"> </script>
+
+{% endblock %}
+
+
