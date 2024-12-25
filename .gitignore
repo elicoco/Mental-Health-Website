@@ -1,2 +1,3 @@
 .env
+websitedatabase.db
 flask_session/
