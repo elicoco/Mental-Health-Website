@@ -1,13 +1,17 @@
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
 from Backend.custom.customclasses import Journal, Snackbar, input_login, signup_information
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
+# Replace with your Gmail email address
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'iuoiuhiugy3e892r8076&*^$F^fs8^%&*(&gd))(*&y()09h&td6RNJJ)'
+app.secret_key = os.getenv('APPSECRETKEY')
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './flask_session/'
 app.config['SESSION_PERMANENT'] = False
