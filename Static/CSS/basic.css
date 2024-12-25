@@ -1,7 +1,181 @@
-.div50width{
-    float: left;
-    width: 50%;
-    border: solid red 100px;
-    height: 100vh;
+/* General reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/* Ensure the html take the full height */
+html {
+    height: 100%; /* Required to enable full height layout */
+    margin: 0; /* Remove default margins */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9; /* Lighter background for a cleaner feel */
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body stretches to full viewport height */
+    position: relative; /* Added to allow positioning of elements */
+    height: 100%; /* Required to enable full height layout */
+    margin: 0; /* Remove default margins */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
 }
 
+/* Header Styles */
+#header_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Adds space under the header */
+}
+
+.leftheader img {
+    width: 100px;
+    height: auto;
+}
+
+.header_menu {
+    display: flex;
+    gap: 30px;
+    margin-left: auto;
+}
+
+.header_link {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.header_link:hover {
+    color: #4CAF50; /* Green hover effect */
+}
+
+.headerdiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_title {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.profile_pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+/* Main content area */
+#main_page {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-grow: 1;
+}
+/* Page container takes full height */
+#page_container {
+    display: flex;
+    flex-direction: column; /* Ensure children are stacked vertically */
+    min-height: 100vh; /* Full height of viewport */
+}
+
+/* Footer Styles */
+#footer_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+    flex-shrink: 0; /* Prevent the footer from shrinking */
+    width: 100%;
+}
+
+.footer_menu {
+    display: flex;
+    gap: 20px;
+}
+
+.footer_link {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.footer_link:hover {
+    color: #4CAF50; /* Green hover effect */
+}
+
+.footerdivs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer_title {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.footer_right {
+    text-align: right;
+    font-size: 14px;
+    color: #888;
+}
+
+.footer_logo {
+    width: 50px;
+    height: auto;
+}
+
+/* Optional button styles */
+button {
+    padding: 12px 25px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px); /* Adds a subtle floating effect */
+}
+
+button:active {
+    transform: translateY(0); /* Removes floating effect on click */
+}
+/* Links */
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover {
+    color: #4CAF50;
+}

@@ -1,0 +1,75 @@
+/* Center the signup form */
+#signup-form {
+    background: #ffffff; /* White background for the form */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 30px;
+    max-width: 450px; /* Restrict width for a smaller form */
+    width: 90%; /* Responsive */
+    margin: 0px auto; /* Center horizontally and vertically with auto and margin */
+    transform: translateY(-50%);
+    position: relative; /* Maintain positioning control */
+    top: 50%; /* Center vertically */
+}
+/* Input fields */
+#signup-form input[type="text"],
+#signup-form input[type="email"],
+#signup-form input[type="password"] {
+    width: 100%; /* Full width */
+    padding: 10px;
+    margin: 10px 0; /* Add space between fields */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+/* Input focus effect */
+#signup-form input:focus {
+    border-color: #45a049; /* Highlight with a calming green */
+    outline: none;
+    box-shadow: 0 0 5px rgba(251, 192, 45, 0.5);
+}
+/* Labels */
+#signup-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+/* Submit button */
+#signup-form button[type="submit"] {
+    background-color: #45a049; /* Positive green tone */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+/* Submit button hover */
+#signup-form button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    form#signup-form {
+        width: 90%; /* Reduce width for smaller screens */
+    }
+}
+
+/* Row for First and Last Name */
+.name-row {
+    display: flex; /* Enable flex layout */
+    justify-content: space-between; /* Distribute space between items */
+    gap: 20px; /* Space between First Name and Last Name */
+}
+
+/* Form Group Styling */
+.form-group {
+    flex: 1; /* Make each group occupy equal width */
+    display: flex;
+    flex-direction: column; /* Stack label and input vertically */
+}

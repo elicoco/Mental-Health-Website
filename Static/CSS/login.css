@@ -1,8 +1,74 @@
-#signup_button{
-    height: 100px;
-    width: 200px;
-    background-color: rgb(0, 0, 0);
+/* Login Container Styles */
+.login-container {
+    font-weight: bold;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Ensures the form doesn't stretch too wide */
+    text-align: center;
+    float: center;
+    margin: 0px auto; /* Center horizontally and vertically with auto and margin */ 
 }
-#signup_text{
+/* Position login button to top-right */
+#login_button {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    background-color: #4CAF50;
     color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#login_button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px); /* Adds a subtle floating effect */
+}
+
+#login_button:active {
+    transform: translateY(0); /* Removes floating effect on click */
+}
+.form-group {
+    margin-bottom: 20px;
+}
+/* Signup Button Styles */
+.signup-container {
+    margin-top: 20px;
+}
+#signup_button {
+    text-decoration: none;
+    color: #4CAF50;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+#signup_button:hover {
+    color: #45a049;
+}
+#signup_text {
+    margin: 0;
+    font-size: 18px;
+}
+/* Form input styles */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }

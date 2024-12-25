@@ -4,34 +4,33 @@
 Signup
 {% endblock %}
 
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/signup.css') }}">
+{% endblock %}
+
 {% block main %}
 
 <form id = "signup-form" method="post">
-    <br>
     <label for="username">Username: </label>
     <input type="text" required name="username" value="{{ info.username }}"/>
-    <br>
-    <br>
-    <label for="firstname">First Name: </label>
-    <input type="firstname" required name="firstname" value="{{ info.first_name }}"/>
-    <br>
-    <br> 
-    <label for="lastname">Last Name: </label>
-    <input type="lastname" required name="lastname" value="{{ info.last_name }}"/>
-    <br>
-    <br> 
+    <div class="name-row">
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="firstname">First Name:</label>
+            <input type="text" required name="firstname" value="{{ info.first_name }}" />
+        </div>
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="lastname">Last Name:</label>
+            <input type="text" required name="lastname" value="{{ info.last_name }}" />
+        </div>
+    </div>
     <label for="email">Email: </label>
-    <input type="email" required name="email" value="{{ info.email }}"/>
-    <br>
-    <br>
+    <input type="text" required name="email" value="{{ info.email }}"/>
     <label for="password">Password: </label>
     <input id = "password" type="password" required name="password"/>
-    <br>
-    <br>
     <label for="re-enter-password">Re-enter Password: </label>
     <input id = "re-enter-password" type="password" required name="re-enter-password"/>
-    <br>
-    <br>
     <button type="submit">Submit</button>
 </form>
 <script>
