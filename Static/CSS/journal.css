@@ -1,0 +1,53 @@
+/* Editable fields */
+#journal-title, #journal-content {
+    border: 1px dashed #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+#journal-title:focus, #journal-content:focus {
+    border-color: #fbc02d;
+    background-color: #fff8e1;
+    outline: none;
+}
+/* Button styles */
+.buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#save-button {
+    background-color: #45a049;
+}
+
+#cancel-button {
+    background-color: #f44336;
+}
+
+#delete-button {
+    background-color: #d32f2f;
+}
+
+#prompt-button {
+    background-color: #fbc02d;
+    color: black;
+}
+
+.buttons button:hover {
+    opacity: 0.9;
+}
+
+/* Journal date */
+#journal-date {
+    font-size: 14px;
+    color: #666;
+    margin-top: 20px;
+    text-align: right;
+}

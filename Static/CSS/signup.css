@@ -4,12 +4,9 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     padding: 30px;
-    max-width: 450px; /* Restrict width for a smaller form */
-    width: 90%; /* Responsive */
+    max-width: 600px; /* Restrict width for a smaller form */
+    width: 80%; /* Responsive */
     margin: 0px auto; /* Center horizontally and vertically with auto and margin */
-    transform: translateY(-50%);
-    position: relative; /* Maintain positioning control */
-    top: 50%; /* Center vertically */
 }
 /* Input fields */
 #signup-form input[type="text"],

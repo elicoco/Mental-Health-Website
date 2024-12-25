@@ -1,9 +1,6 @@
 from datetime import datetime
-import time
-from flask import Flask, flash, redirect, render_template, request, session, url_for
-import requests
+from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
-from Backend.database.creating_tables import createalltables
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
 from Backend.custom.customclasses import Journal, Snackbar, input_login, signup_information

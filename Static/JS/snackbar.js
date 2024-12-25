@@ -1,4 +1,4 @@
-function showSnackbar(message, colour, time=3) {
+function showSnackbar(message, colour, time=10) {
   var snackbar = document.createElement("div");
   snackbar.textContent = message;
 

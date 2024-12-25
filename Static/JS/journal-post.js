@@ -1,10 +1,9 @@
-let prompts = [];  // Declare an array to store the prompts
 green = "#4CAF50";
 red = "#F44336";
 blue = "#2196F3";
-
+let prompts = [];  // Declare an array to store the prompts
 // Fetch the JSON data from the static folder
-fetch('/static/data/prompts.json') 
+fetch('/static/JSON/prompts.json') 
     .then(response => response.json())
     .then(data => {
         prompts = data.prompts;  // Store the prompts in the array
