@@ -40,3 +40,16 @@ class Snackbar:
     need_snackbar: bool
     colour: str
     message: str
+
+@dataclass
+class Daily_Tracker:
+    id: int
+    date: str
+    comment: str = ""
+    mood_score: int = 50
+    bed_time: float = 0
+    wakeup_time: float = 0
+    meditation_mins: int = 0
+    productive_mins: int = 0
+    exercise_mins: int = 0
+

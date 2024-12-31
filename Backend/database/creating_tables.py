@@ -23,21 +23,23 @@ def createalltables():
                    encrypted_password TEXT NOT NULL,
                    username TEXT UNIQUE,
                    email_verified_bool INTEGER DEFAULT 0,
-                   hashed_email_verification_key TEXT               
+                   hashed_email_verification_key TEXT          
                    )''')
     conn.commit()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Daily_Tracker 
                    (id INTEGER PRIMARY KEY AUTOINCREMENT,
                    user_id INT NOT NULL,
-                   comment TEXT DEFAULT "",
+                   comment TEXT DEFAULT "Add a comment",
                    date_of_data TEXT DEFAULT (DATE('now')),
-                   mood_score INTEGER DEFAULT 0,
-                   bed_time TEXT DEFAULT "00:00",
-                   wakeup_time TEXT DEFAULT "00:00",
+                   mood_score INTEGER DEFAULT 50,
+                   bed_time REAL DEFAULT 21,
+                   wakeup_time REAL DEFAULT 7,
                    meditation_minutes INTEGER DEFAULT 0,
                    productive_minutes INTEGER DEFAULT 0,
                    exercise_minutes INTEGER DEFAULT 0,
-                   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+                   in_use INTEGER DEFAULT 0,
+                   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+                   CONSTRAINT date UNIQUE (user_id, date_of_data)
                    )''')
     conn.commit()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Journals 

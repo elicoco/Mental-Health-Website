@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
+from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
 from Backend.custom.customclasses import Journal, Snackbar, input_login, signup_information
@@ -83,9 +84,11 @@ def signup():
         else:
             return render_template("signup.html", loggedin=False, snackbar = snackbar, info = info_signup)
     else:
-        snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
-        info_signup = signup_information(username="", password="", email="",first_name="",last_name="")
-        return render_template("signup.html", loggedin=False,snackbar = snackbar, info = info_signup)
+        if 'username' in session:
+            return redirect(url_for("main",snackbar_message="Already Logged In"))
+        else:
+            info_signup = signup_information(username="", password="", email="",first_name="",last_name="")
+            return render_template("signup.html", loggedin=False, info = info_signup)
 
 @app.route("/emailverification/<key>")
 def email_verification(key):
@@ -165,6 +168,100 @@ def delete_journal(id):
             snackbar_message = "You do not have access to this journal"
             snackbar_colour = red
         return redirect(url_for('journal', snackbar_message=snackbar_message, snackbar_colour=snackbar_colour))
+
+@app.route("/daily_tracker")
+def daily_tracker():
+    in_session = check_if_session()
+    if in_session != None:
+        return in_session
+    else:
+        daily_trackers = get_daily_trackers_by_username(username=session['username'])
+        for daily_tracker in daily_trackers:
+            daily_tracker.date = datetime.strptime(daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
+        if request.args.get('snackbar_message','') != None:
+            snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
+            need_snackbar=True,colour=request.args.get('snackbar_colour','')))
+        else:
+            snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
+        return render_template("daily_tracker_search.html",daily_trackers=daily_trackers, snackbar=snackbar)
+
+@app.route("/daily_tracker/<id>", methods=["GET","POST"])
+def daily_tracker_id(id):
+    if request.method == "GET":
+        in_session = check_if_session()
+        if in_session != None:
+            return in_session
+        else:
+            if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
+                # checks if user is allowed to access this daily_tracker
+                current_daily_tracker = get_daily_tracker_by_id(daily_tracker_id=id)
+                current_daily_tracker.date = datetime.strptime(current_daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
+                print(current_daily_tracker)
+                return render_template("daily_tracker.html",daily_tracker=current_daily_tracker)
+            else:
+                return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))
+    elif request.method == "POST":
+        if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
+            # Get JSON data sent from the frontend
+            data = request.get_json()
+            # Validate incoming data
+            print(data)
+            if ("comment" not in data or "mood_score" not in data or "bed_time" not in data or 
+                "wakeup_time" not in data  or "meditation_mins" not in data  or "prodcutive_mins" not in data
+                 or "exercise_mins" not in data):
+                return {"error": "Invalid data format"}, 400     
+            updated_comment = data["comment"]
+            updated_mood_score = data["mood_score"]
+            updated_bed_time = data["bed_time"]
+            updated_wakeup_time = data["wakeup_time"]
+            updated_meditation_mins = data["meditation_mins"]
+            updated_prodcutive_mins = data["prodcutive_mins"]
+            updated_exercise_mins = data["exercise_mins"]
+            # Update daily_tracker in the database
+            update_daily_tracker_by_id(id=id, comment=updated_comment, mood_score=updated_mood_score,
+            bed_time=updated_bed_time,wakeup_time=updated_wakeup_time,meditation_mins=updated_meditation_mins,
+            productive_mins=updated_prodcutive_mins, exercise_mins=updated_exercise_mins)
+            return {"message": "Daily Tracker updated successfully"}, 200
+        else: # if user is not allowed access to this daily tracker
+            return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))
+
+@app.route('/new_daily_tracker')
+def new_daily_tracker():
+    in_session = check_if_session()
+    if in_session is not None:
+        return in_session
+    else:
+        current_daily_tracker = create_new_daily_tracker_by_username(session['username'])
+        return redirect(url_for('daily_tracker_id', id=current_daily_tracker.id))
+    # redirect to daily_trackers page for new daily_tracker
+
+@app.route('/delete_daily_tracker/<id>')
+def delete_daily_tracker(id):
+    in_session = check_if_session()
+    if in_session is not None:
+        return in_session
+    else:
+        if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
+            # checks if has access to delete this daily_tracker
+            delete_daily_tracker_by_id(id)
+            snackbar_message = "Daily Tracker Deleted Successfully" 
+            snackbar_colour = green  
+        else: # if does not have access to delete this daily_tracker
+            snackbar_message = "You do not have access to this Daily Tracker"
+            snackbar_colour = red
+        return redirect(url_for('daily_tracker', snackbar_message=snackbar_message, snackbar_colour=snackbar_colour))
+
+@app.route('/scatter_graph_view')
+def display_scatter_graph():
+    in_session = check_if_session()
+    if in_session is not None:
+        return in_session
+    else:
+        return render_template("scatter-graph-display.html")
+
+
+
+
 
 @app.route('/logout')
 def logout():

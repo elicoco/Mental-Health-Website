@@ -1,0 +1,119 @@
+/* Editable fields */
+#daily_tracker-title, #daily_tracker-content {
+    border: 1px dashed #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+#daily_tracker-title:focus, #daily_tracker-content:focus {
+    border-color: #fbc02d;
+    background-color: #fff8e1;
+    outline: none;
+}
+/* Button styles */
+.buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#save-button {
+    background-color: #45a049;
+}
+
+#cancel-button {
+    background-color: #f44336;
+}
+
+#delete-button {
+    background-color: #d32f2f;
+}
+
+.buttons button:hover {
+    opacity: 0.9;
+}
+
+/* Daily Tracker date */
+#daily_tracker-date {
+    font-size: 14px;
+    color: #666;
+    margin-top: 20px;
+    text-align: right;
+}
+.div50width{
+    float: left;
+    width: calc(50% - 20px);
+    height: 60%;
+}
+.div50height{
+    height: calc(50% - 20px);
+}
+.slider-container {
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#mood-display {
+    font-size: 2em;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+#mood-slider {
+    width: 200px;
+}
+.dropdown-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.dropdown {
+    font-size: 1rem;
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+.dropdown:focus {
+    border-color: #4caf50;
+    outline: none;
+}
+.label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #4caf50; 
+    margin-right: 10px; 
+    display: inline-block; 
+    vertical-align: middle; 
+}
+/* Hover effect for interactivity */
+.label:hover {
+    color: #2e7d32; 
+    cursor: pointer; 
+}
+.time-input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.time-input {
+    width: 60px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+#sleep-hours{
+    color: #4caf50;
+    font-weight: 600; 
+    margin-top: 10px;
+}

@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+
+{% block title %}
+Daily Tracker
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/daily_tracker_search.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<a href="{{ url_for('new_daily_tracker') }}" id="new-daily_tracker-btn">Track Today</a>
+
+<div class="daily_tracker-container">
+    {% for trackers in daily_trackers %}
+    <div class="daily_tracker-loop">
+        <h1 class="comment-preview">{{ trackers.comment }}</h1>
+        <p>{{ trackers.date }}</p>
+        <a href="{{ url_for('daily_tracker_id', id=trackers.id) }}" class="edit-link">
+            Edit Daily Tracker
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+

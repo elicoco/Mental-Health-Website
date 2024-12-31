@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
-
-from backend.custom.customclasses import correlationStats
+from Backend.custom.customclasses import correlationStats
 
 def calculate_data(data_x: list, data_y: list, name_x: str , name_y: str) -> correlationStats:
     data_x = np.array(data_x)
@@ -17,3 +16,11 @@ def calculate_data(data_x: list, data_y: list, name_x: str , name_y: str) -> cor
     stats = correlationStats(name_x, name_y, pmcc, coef) 
     return stats
 
+
+
+
+# FROM dailytracker SELECT mood.mood_score, data.amount
+# INNER JOIN mood ON dailytracker.id == mood.day_id
+# INNER JOIN data ON dailytracker.id == data.day_id
+# WHERE dailytracker.date >= DATE_SUB(CURDATE(), INTERVAL amount_of_days DAY) 
+# and data.type = type_of_data -- only gets data from one type

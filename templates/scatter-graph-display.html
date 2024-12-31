@@ -1,0 +1,20 @@
+
+{% extends "template.html" %}
+
+{% block title %}
+Scatter
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/journal.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block main %}
+<h1>Scatter Plot with Line of Best Fit</h1>
+<canvas id="scatterChart" width="400px" height="400px"></canvas>
+<script src="{{ url_for('static', filename='js/scatter-graph.js') }}"> </script>
+
+{% endblock %}
+
+

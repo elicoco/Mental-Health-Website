@@ -2,77 +2,48 @@ import secrets
 import string
 
 from Backend.database.creating_tables import closedatabase, startdatabase
+from Backend.database.daily_tracker import get_daily_trackers_by_username
 from Backend.database.journal import create_new_journal_by_username
 from Backend.login_signup.hash import password_hash
-def insert_users():
+
+def insert_test_data():
     cursor, conn = startdatabase()
+    
+    # Insert Users
     users = [
-        ("Alice", "Johnson", "alice.johnson@example.com", "password123", "alicej"),
-        ("Bob", "Smith", "bob.smith@example.com", "password123", "bobsmith"),
-        ("Charlie", "Brown", "charlie.brown@example.com", "password123", "charlieb"),
-        ("Diana", "Prince", "diana.prince@example.com", "password123", "dianap"),
-        ("Edward", "Norton", "edward.norton@example.com", "password123", "edwardn"),
-        ("Fiona", "Apple", "fiona.apple@example.com", "password123", "fionaa"),
-        ("George", "Harrison", "george.harrison@example.com", "password123", "georgeh"),
-        ("Hannah", "Montana", "hannah.montana@example.com", "password123", "hannahm"),
-        ("Ian", "Curtis", "ian.curtis@example.com", "password123", "ianc"),
-        ("Julia", "Roberts", "julia.roberts@example.com", "password123", "juliar"),
+        ("John", "Doe", "johndoess@example.com", password_hash('password123'), "johndoes", 1, password_hash('password123')),
+        ("Jane", "Smith", "janessmith@example.com", "encryptedpass456", "janesmiths", 0, "hashed_key_456"),
+        ("Elias", "Miller", "elisasmiller@example.com", "encryptedpass789", "eliassms", 1, "hashed_key_789"),
     ]
-
-    for first_name, last_name, email, password, username in users:
-        cursor.execute(
-            '''
-            INSERT INTO Users (first_name, last_name, email, encrypted_password, username, email_verified_bool)
-            VALUES (?, ?, ?, ?, ?, 1)
-            ''',
-            (first_name, last_name, email, password_hash(password), username),
-        )
+    cursor.executemany('''INSERT INTO Users (first_name, last_name, email, encrypted_password, username, email_verified_bool, hashed_email_verification_key) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?)''', users)
     
-    conn.commit()
-    closedatabase(cursor)
-
-def insert_daily_trackers_and_journals_for_juliar():
-    cursor, conn = startdatabase()
-    
-    # Step 1: Find user_id of juliar
-    user_id = cursor.execute("SELECT id FROM Users WHERE username = 'juliar'").fetchone()[0]
-    
-    # Step 2: Insert daily trackers for juliar
+    # Insert Daily_Tracker entries
     daily_trackers = [
-        {"user_id": user_id, "date_of_data": "2024-12-10", "mood_score": 7, "comment": "Had a productive day", "bed_time": "22:00", "wakeup_time": "06:30", "meditation_minutes": 15, "productive_minutes": 180, "exercise_minutes": 30},
-        {"user_id": user_id, "date_of_data": "2024-12-11", "mood_score": 6, "comment": "Felt a bit stressed but got through it", "bed_time": "23:00", "wakeup_time": "07:00", "meditation_minutes": 10, "productive_minutes": 150, "exercise_minutes": 20},
-        {"user_id": user_id, "date_of_data": "2024-12-12", "mood_score": 8, "comment": "Relaxed and spent time with family", "bed_time": "22:30", "wakeup_time": "07:15", "meditation_minutes": 20, "productive_minutes": 120, "exercise_minutes": 40},
-        {"user_id": user_id, "date_of_data": "2024-12-13", "mood_score": 5, "comment": "Busy day with lots of work", "bed_time": "23:30", "wakeup_time": "08:00", "meditation_minutes": 5, "productive_minutes": 200, "exercise_minutes": 25},
-        {"user_id": user_id, "date_of_data": "2024-12-14", "mood_score": 9, "comment": "Great day, enjoyed some free time", "bed_time": "22:00", "wakeup_time": "06:45", "meditation_minutes": 30, "productive_minutes": 180, "exercise_minutes": 35}
+        (1, "Feeling good today", "2024-12-25", 80, 22.5, 6.5, 15, 120, 45, 1),
+        (2, "Tired but productive", "2024-12-25", 60, 23.0, 7.0, 10, 180, 30, 1),
+        (3, "Excited about learning!", "2024-12-25", 90, 21.5, 5.5, 20, 240, 60, 1),
     ]
-    
-    # Insert daily trackers
-    for tracker in daily_trackers:
-        cursor.execute('''INSERT INTO Daily_Tracker (user_id, date_of_data, mood_score, comment, bed_time, wakeup_time, meditation_minutes, productive_minutes, exercise_minutes)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                          (tracker["user_id"], tracker["date_of_data"], tracker["mood_score"], tracker["comment"], tracker["bed_time"], tracker["wakeup_time"], tracker["meditation_minutes"], tracker["productive_minutes"], tracker["exercise_minutes"]))
-    
     conn.commit()
-    
-    # Step 3: Insert journals related to daily trackers
+    cursor.executemany('''INSERT INTO Daily_Tracker (user_id, comment, date_of_data, mood_score, bed_time, wakeup_time, meditation_minutes, productive_minutes, exercise_minutes, in_use)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', daily_trackers)
+
+    # Insert Journals
     journals = [
-        {"daily_tracker_id": cursor.lastrowid - 4, "title": "Gratitude", "main_text": "Had a very productive day. Grateful for my progress.", "date_created": "2024-12-10"},
-        {"daily_tracker_id": cursor.lastrowid - 3, "title": "Reflection", "main_text": "The stress today was a bit overwhelming, but I managed to complete my tasks.", "date_created": "2024-12-11"},
-        {"daily_tracker_id": cursor.lastrowid - 2, "title": "Family Time", "main_text": "Enjoyed the time spent with my family. Very relaxing.", "date_created": "2024-12-12"},
-        {"daily_tracker_id": cursor.lastrowid - 1, "title": "Work Rush", "main_text": "It was a busy workday. Feeling tired but accomplished.", "date_created": "2024-12-13"},
-        {"daily_tracker_id": cursor.lastrowid, "title": "Chill Day", "main_text": "Had a great time relaxing and focusing on self-care.", "date_created": "2024-12-14"}
+        (1, "Daily Reflection", "Had a productive day and met all my goals."),
+        (2, "End-of-Day Thoughts", "Feeling tired but happy about the progress."),
+        (3, "Motivational Entry", "Learning new things always energizes me!"),
     ]
-    
-    # Insert journals for each daily tracker
-    for journal in journals:
-        cursor.execute('''INSERT INTO Journals (daily_tracker_id, title, main_text)
-                          VALUES (?, ?, ?)''', 
-                          (journal["daily_tracker_id"], journal["title"], journal["main_text"]))
+    cursor.executemany('''INSERT INTO Journals (daily_tracker_id, title, main_text)
+                          VALUES (?, ?, ?)''', journals)
     
     conn.commit()
     closedatabase(cursor)
 
+# Call the function to insert test data
+insert_test_data()
 
 
-insert_users()
-insert_daily_trackers_and_journals_for_juliar()
+
+insert_test_data()
+
