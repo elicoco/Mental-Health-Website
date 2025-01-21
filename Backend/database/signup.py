@@ -1,7 +1,6 @@
 import secrets
 import string
 from Backend.custom.customclasses import Snackbar, signup_information
-import sqlite3
 from Backend.database.creating_tables import closedatabase, startdatabase
 from Backend.email.email import send_email
 from Backend.login_signup.hash import password_hash

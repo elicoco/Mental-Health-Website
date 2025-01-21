@@ -1,6 +1,7 @@
 import secrets
 import string
 
+from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username
 from Backend.database.creating_tables import closedatabase, startdatabase
 from Backend.database.daily_tracker import get_daily_trackers_by_username
 from Backend.database.journal import create_new_journal_by_username
@@ -40,10 +41,5 @@ def insert_test_data():
     conn.commit()
     closedatabase(cursor)
 
-# Call the function to insert test data
-insert_test_data()
-
-
-
-insert_test_data()
+print(calculate_mood_exercise_on_username('juliar').to_dict())
 

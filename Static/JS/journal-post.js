@@ -1,6 +1,7 @@
 green = "#4CAF50";
 red = "#F44336";
 blue = "#2196F3";
+orange ="#FFBF00";
 let prompts = [];  // Declare an array to store the prompts
 // Fetch the JSON data from the static folder
 fetch('/static/JSON/prompts.json') 
@@ -24,14 +25,23 @@ function saveJournal(){
         title: document.getElementById('journal-title').innerText,
         content: document.getElementById('journal-content').innerText
     };
-    fetch(window.location.href, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(journalData)
-    });
-    showSnackbar("Journal Successfully Saved",green)
+    // gets the data from the HTML
+    if (journalData.title == "Add Title" || journalData.content == "Add Content"){ 
+        // input validation
+        showSnackbar("Journal could not be saved: Title or Content is missing", orange)
+        // shows snackbar if not saved
+    }
+    else{
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(journalData)
+        });
+        showSnackbar("Journal Successfully Saved",green)
+        // shows snackbar if successfully saved
+    }
 }
 function deleteJournal(){
     var journalid = document.getElementById("journalId").value;

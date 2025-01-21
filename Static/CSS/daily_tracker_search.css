@@ -78,6 +78,24 @@ body {
     background-color: #388e3c; /* Darker green */
 }
 
+#graph-btn {
+    height: 50px;
+    background-color: #45a049; /* Green */
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    float: right;
+}
+
+/* New Journal Button Hover */
+#graph-btn:hover {
+    background-color: #388e3c; /* Darker green */
+}
+
 /* Responsive Design for smaller screens */
 @media (max-width: 768px) {
     .daily_tracker-loop {

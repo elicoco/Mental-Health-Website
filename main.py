@@ -1,8 +1,10 @@
 from datetime import datetime
+import json
 import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
+from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
@@ -251,17 +253,31 @@ def delete_daily_tracker(id):
             snackbar_colour = red
         return redirect(url_for('daily_tracker', snackbar_message=snackbar_message, snackbar_colour=snackbar_colour))
 
-@app.route('/scatter_graph_view')
-def display_scatter_graph():
+# for all graphs
+@app.route('/graph/<grouptype>')
+def display_scatter_graph(grouptype):
     in_session = check_if_session()
     if in_session is not None:
         return in_session
     else:
-        return render_template("scatter-graph-display.html")
-
-
-
-
+        # checks the grouptype and if it doesn't exist then it redirects to 
+        # the main daily tracker page
+        if grouptype == 'exercise': # for exercise type
+            data = calculate_mood_exercise_on_username(session['username'])
+        elif grouptype == 'meditation': # for meditation type
+            data = calculate_mood_meditation_on_username(session['username'])
+        elif grouptype == 'productive': # for productive type
+            data = calculate_mood_productive_on_username(session['username'])
+        elif grouptype == 'sleep': # for sleep type
+            data = calculate_mood_sleep_on_username(session['username'])
+        else: # if not for any group type
+            snackbar_message = "This graph does not exist"
+            snackbar_colour = orange
+            return redirect(url_for('daily_tracker', snackbar_message=snackbar_message, snackbar_colour=snackbar_colour))
+        # collects the data from the backend
+        stats_json = json.dumps(data.to_dict())
+        grouptype = grouptype.capitalize()
+        return render_template("scatter-graph-display.html", stats=stats_json, name = grouptype)
 
 @app.route('/logout')
 def logout():

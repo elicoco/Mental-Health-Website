@@ -1,6 +1,8 @@
 green = "#4CAF50";
 red = "#F44336";
 blue = "#2196F3";
+orange ="#FFBF00";
+
 const wakeupTime = document.getElementById('wakeup-time').value;
 const hour24 = Math.floor(wakeupTime); // Turn into integer
 const minute = Math.round((wakeupTime - hour24) * 60); // Calculate the minute
@@ -65,14 +67,21 @@ function saveDailyTracker(){
         prodcutive_mins: document.getElementById('productive-mins-input').value || 0,
         meditation_mins: document.getElementById('meditation-mins-input').value || 0
     };
-    fetch(window.location.href, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(daily_trackerData)
-    });
-    showSnackbar("Daily Tracker Successfully Saved", green)
+    if (daily_trackerData.comment == "Add a comment" || daily_trackerData.comment == ""){ 
+        // input validation
+        showSnackbar("Daily Tracker could not be saved: Comment is missing", orange)
+        // shows snackbar if not saved
+    }
+    else{
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(daily_trackerData)
+        });
+        showSnackbar("Daily Tracker Successfully Saved", green)
+    }
 }
 function deleteDailyTracker(){
     var daily_trackerid = document.getElementById("daily_trackerId").value;

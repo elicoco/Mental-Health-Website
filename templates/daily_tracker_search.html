@@ -11,7 +11,7 @@ Daily Tracker
 {% block main %}
 
 <a href="{{ url_for('new_daily_tracker') }}" id="new-daily_tracker-btn">Track Today</a>
-
+<a href="{{ url_for('display_scatter_graph', grouptype='exercise') }}" id="graph-btn">Check Graphs</a>
 <div class="daily_tracker-container">
     {% for trackers in daily_trackers %}
     <div class="daily_tracker-loop">
@@ -23,6 +23,5 @@ Daily Tracker
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
 

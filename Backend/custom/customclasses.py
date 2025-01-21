@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict, List
 @dataclass
 class input_login:
     username: str
@@ -20,13 +21,28 @@ class Journal:
     id: int
     daily_tracker_id: int
 
-@dataclass
 class correlationStats:
-    variableonename: str
-    variabletwoname: str
-    pmcc: float
-    coefficient_line_of_best_fit: float
+    def __init__(self, xname, yname, pmcc, slope, intercept, points):
+        self.xname = xname
+        self.yname = yname
+        self.pmcc = pmcc
+        self.slope = slope
+        self.intercept = intercept
+        self.points = points
+    # allows all points to be defined
+    # as a list of dictionaries, with
+    # x and y being floats
 
+    def to_dict(self):
+        return {
+            "xname": self.xname,
+            "yname": self.yname,
+            "pmcc": self.pmcc,
+            "slope": self.slope,
+            "intercept": self.intercept,
+            "points": self.points,
+        }
+    # this returns all the data as a dictionary 
 @dataclass
 class meditationClassifier: # each meditation has its own classification
     id: int
