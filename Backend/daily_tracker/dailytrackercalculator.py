@@ -80,3 +80,17 @@ def calculate_mood_sleep_on_username(username: str):
     closedatabase(cursor)
     return correlationstats
 
+
+def check_data_exists(username: str):
+    # checks if there is any daily trackers to be analysed 
+    cursor, conn = startdatabase()
+    stats = cursor.execute('''SELECT * FROM Daily_Tracker 
+            INNER JOIN Users on Users.id = Daily_Tracker.user_id 
+            WHERE Users.username = ? and Daily_Tracker.in_use = 1''',(username,)).fetchall()
+    closedatabase(cursor)
+    if len(stats) >= 1:
+        return True
+    else:
+        return False
+
+# returns true or false

@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
-from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username
+from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
@@ -260,6 +260,10 @@ def display_scatter_graph(grouptype):
     if in_session is not None:
         return in_session
     else:
+        if check_data_exists(session['username']) == False:
+            # if there is no data then it will redirect to the daily tracker page so there is no error
+            snackbar_message = "No data to be analysed"
+            return redirect(url_for('daily_tracker', snackbar_message=snackbar_message, snackbar_colour=orange))
         # checks the grouptype and if it doesn't exist then it redirects to 
         # the main daily tracker page
         if grouptype == 'exercise': # for exercise type

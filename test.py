@@ -1,7 +1,7 @@
 import secrets
 import string
 
-from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username
+from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, check_data_exists
 from Backend.database.creating_tables import closedatabase, startdatabase
 from Backend.database.daily_tracker import get_daily_trackers_by_username
 from Backend.database.journal import create_new_journal_by_username
@@ -40,6 +40,38 @@ def insert_test_data():
     
     conn.commit()
     closedatabase(cursor)
+import sqlite3
 
-print(calculate_mood_exercise_on_username('juliar').to_dict())
+# Function to start the database connection
+def startdatabase():  
+    connect = sqlite3.connect("websitedatabase.db")
+    cursor = connect.cursor() 
+    return cursor, connect
 
+# Function to close the database connection
+def closedatabase(cursor):
+    cursor.close()
+
+# Function to insert exercise and mood data
+def insert_exercise_mood_data(user_id, exercise_data, mood_data):
+    cursor, conn = startdatabase()
+    
+    for day in range(1, len(exercise_data) + 1):
+        cursor.execute('''
+            INSERT INTO Daily_Tracker (user_id, date_of_data, mood_score, exercise_minutes, in_use)
+            VALUES (?, DATE('now', ? || ' days'), ?, ?, 1)
+        ''', (user_id, day - len(exercise_data), mood_data[day - 1], int(exercise_data[day - 1] * 10)))
+    
+    conn.commit()
+    closedatabase(cursor)
+
+# # Sample data
+# exercise_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.23, 2.34, 1.56, 0.78, 2.12, 1.89, 0.67, 1.45, 2.01, 0.93, 1.78, 2.25, 0.54, 1.67, 2.45]
+
+# mood_data =  [64, 64, 69, 70, 71, 73, 73, 74, 74, 76, 77, 77, 77, 77, 79, 79, 79, 80, 81, 81, 82, 82, 83, 83, 83, 84, 85, 87, 89, 89]
+
+# # Insert data for a specific user (e.g., user_id = 4)
+# insert_exercise_mood_data(user_id=5, exercise_data=exercise_data, mood_data=mood_data)
+
+
+print(check_data_exists('ianc'))
