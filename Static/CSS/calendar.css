@@ -1,0 +1,123 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+#calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto 20px;
+}
+
+
+/* Calendar Container */
+#calendar {
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+/* Month Title */
+#month-year {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Weekdays Styling */
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    padding: 10px 0;
+    border-radius: 5px 5px 0 0;
+}
+
+.weekdays div {
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Days Grid */
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+/* Individual Day Styling */
+.day {
+    padding: 20px;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.day:hover {
+    background: #007bff;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Empty Days */
+.day.blank {
+    background: none;
+    border: none;
+    cursor: default;
+    box-shadow: none;
+}
+
+/* Navigation Buttons */
+button {
+    background:  #45a049;;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    margin: 20px 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+    #calendar {
+        max-width: 90%;
+    }
+
+    .day {
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .weekdays div {
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+    }
+}

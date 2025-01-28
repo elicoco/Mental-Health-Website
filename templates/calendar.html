@@ -1,0 +1,36 @@
+{% extends "template.html" %}
+
+{% block title %}
+Calendar
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/calendar.css') }}">
+{% endblock %}
+
+
+{% block main %}
+<div id="calendar-header">
+    <button onclick="prevMonth()">Previous</button>
+    <h1 id="month-year"></h1>
+    <button onclick="nextMonth()">Next</button>
+</div>
+
+<div id="calendar">
+    <div class="weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+    </div>
+    <div class="days" id="daysContainer"></div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/calendar.js') }}"> </script>
+
+{% endblock %}
+

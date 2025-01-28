@@ -283,6 +283,18 @@ def display_scatter_graph(grouptype):
         grouptype = grouptype.capitalize()
         return render_template("scatter-graph-display.html", stats=stats_json, name = grouptype)
 
+@app.route('/calendar',methods=['GET','POST'])
+def calendar():
+    in_session = check_if_session()
+    if in_session is not None:
+        return in_session
+    else:
+        if request.method == 'GET':
+            return render_template("calendar.html")
+        # else:
+            
+
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
