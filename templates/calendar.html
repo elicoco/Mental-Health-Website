@@ -10,6 +10,8 @@ Calendar
 
 
 {% block main %}
+<input type="hidden" id="daily-trackers" value="{{ dailytrackers }}">
+
 <div id="calendar-header">
     <button onclick="prevMonth()">Previous</button>
     <h1 id="month-year"></h1>

@@ -63,7 +63,6 @@ body {
     background: #f4f4f4;
     border: 1px solid #ddd;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 18px;
     color: #333;
     text-align: center;
@@ -71,7 +70,8 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.day:hover {
+.tracker-day:hover {
+    cursor: pointer;
     background: #007bff;
     color: white;
     transform: scale(1.05);

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
-from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, update_daily_tracker_by_id
+from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
 from Backend.custom.customclasses import Journal, Snackbar, input_login, signup_information
@@ -283,17 +283,33 @@ def display_scatter_graph(grouptype):
         grouptype = grouptype.capitalize()
         return render_template("scatter-graph-display.html", stats=stats_json, name = grouptype)
 
-@app.route('/calendar',methods=['GET','POST'])
-def calendar():
+@app.route('/calendar')
+def calendar(): 
     in_session = check_if_session()
     if in_session is not None:
         return in_session
     else:
-        if request.method == 'GET':
-            return render_template("calendar.html")
-        # else:
-            
+        data = get_daily_trackers_by_username(session['username'])
+        # converts it to json for transfer to JS
+        trackers_dict_list = [tracker.to_dict() for tracker in data]
+        daily_trackers_json = json.dumps(trackers_dict_list, indent=4)
+        return render_template("calendar.html", dailytrackers = daily_trackers_json)
 
+
+@app.route('/day/<date>')
+def display_day(date):
+    in_session = check_if_session()
+    if in_session is not None:
+        return in_session
+    else:
+        daily_tracker = get_daily_trackers_by_username_date(session['username'],date)
+        print(daily_tracker)
+        if daily_tracker == False:
+            snackbar = (Snackbar(message='No daily tracker available for this day',
+            need_snackbar = True,colour = red))
+            return render_template("calendar.html", snackbar=snackbar)
+        else:
+            return redirect(url_for('daily_tracker_id', id=daily_tracker.id))
 
 @app.route('/logout')
 def logout():

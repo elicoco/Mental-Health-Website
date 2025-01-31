@@ -57,15 +57,29 @@ class Snackbar:
     colour: str
     message: str
 
-@dataclass
 class Daily_Tracker:
-    id: int
-    date: str
-    comment: str = ""
-    mood_score: int = 50
-    bed_time: float = 0
-    wakeup_time: float = 0
-    meditation_mins: int = 0
-    productive_mins: int = 0
-    exercise_mins: int = 0
-
+    def __init__(self, id, date, comment="", mood_score=50, bed_time=0, wakeup_time=0, 
+                 meditation_mins=0, productive_mins=0, exercise_mins=0):
+        self.id = id
+        self.date = date
+        self.comment = comment
+        self.mood_score = mood_score
+        self.bed_time = bed_time
+        self.wakeup_time = wakeup_time
+        self.meditation_mins = meditation_mins
+        self.productive_mins = productive_mins
+        self.exercise_mins = exercise_mins
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "date": self.date,
+            "comment": self.comment,
+            "mood_score": self.mood_score,
+            "bed_time": self.bed_time,
+            "wakeup_time": self.wakeup_time,
+            "meditation_mins": self.meditation_mins,
+            "productive_mins": self.productive_mins,
+            "exercise_mins": self.exercise_mins
+        }
+    # this function returns the data as a dictionary

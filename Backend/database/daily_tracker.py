@@ -15,6 +15,13 @@ def get_daily_trackers_by_username(username: str):
     closedatabase(cursor)
     return daily_trackers
 
+def get_daily_trackers_by_username_date(username: str, date: str):
+    daily_trackers = get_daily_trackers_by_username(username)
+    for trackers in daily_trackers:
+        if trackers.date == date:
+            return trackers
+    return False
+
 def get_daily_tracker_by_id(daily_tracker_id: int):
     cursor, conn = startdatabase()
     result =  cursor.execute('''SELECT Daily_Tracker.* FROM Daily_Tracker 

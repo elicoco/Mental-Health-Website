@@ -3,7 +3,7 @@ import string
 
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, check_data_exists
 from Backend.database.creating_tables import closedatabase, startdatabase
-from Backend.database.daily_tracker import get_daily_trackers_by_username
+from Backend.database.daily_tracker import get_daily_trackers_by_username, get_daily_trackers_by_username_date
 from Backend.database.journal import create_new_journal_by_username
 from Backend.login_signup.hash import password_hash
 
@@ -74,4 +74,5 @@ def insert_exercise_mood_data(user_id, exercise_data, mood_data):
 # insert_exercise_mood_data(user_id=5, exercise_data=exercise_data, mood_data=mood_data)
 
 
-print(check_data_exists('ianc'))
+print(get_daily_trackers_by_username_date('juliar','2025-01-02'))
+print(get_daily_trackers_by_username_date('bobsmith','2025-01-12'))
