@@ -3,3 +3,41 @@
 {% block title %}
 Meditations
 {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/meditation_search.css') }}">
+{% endblock %}
+
+{% block main %}
+<div class="search-container">
+    <input type="search" id="search" value= "{{ searchvalue }}" placeholder="Search" onkeyup="debounceSearch(this.value)">
+</div>
+<div class="meditation-container">
+    {% for meditation in meditations %}
+    <div class="meditation-loop">
+        <h1>{{ meditation.name }}</h1>
+        <div class="categories">
+            {% for type in meditation.type %}
+            <span class="category">{{ type }}</span>
+            {% endfor %}
+        </div>
+            <a href="{{ url_for('meditation', id=meditation.id) }}" class="edit-link">
+            Listen to Meditation
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    let timeout = null;
+    function debounceSearch(value) {
+        clearTimeout(timeout); // Clear the previous timeout
+        timeout = setTimeout(() => {
+            search(value); // Call the search function after 0.5 second
+        }, 500); 
+    }
+    function search(searchkey){
+        window.location.href = "/meditation_search/" + searchkey
+    }
+</script>
+{% endblock %}

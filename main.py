@@ -8,9 +8,10 @@ from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
-from Backend.custom.customclasses import Journal, Snackbar, input_login, signup_information
+from Backend.custom.customclasses import Journal, Snackbar, input_login, meditationClassifier, signup_information
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
-# Replace with your Gmail email address
+from Backend.meditations.search_meditations import get_all_meditations, get_meditation_by_id, search_meditation_on_key
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -24,43 +25,53 @@ red = "#F44336"
 blue = "#2196F3"
 orange = "#FBC02D"
 
+# function to check if user is in a session
 def check_if_session():
     if 'username' in session: # if in a session
         return None
     else:
         return( redirect(url_for("login", 
         snackbar_message="Need to login", snackbar_colour=orange)))
-        # redirect to login
+        # redirect to login page
 
+# main home page
 @app.route("/")
 def main():
+    # check if user is logged in
     in_session = check_if_session()
     if in_session != None:
         return in_session
     else:
         if request.args.get('snackbar_message','') != "":
+            # checks if there is snackbar and sends snackbar accordingly
             snackbar = Snackbar(message=request.args.get('snackbar_message', ''),need_snackbar=True,colour=green)
         else:
             snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
         return render_template("home.html", snackbar=snackbar, username = session['username'])
 
+# login page
 @app.route("/login",methods=["GET","POST"])
 def login():
     if request.method == "POST":
+        # gets form if it is a POST request
         username = request.form['username']
         password = request.form['password']
         if username != None and password != None:
+            # checks data is not empty
             information = input_login(username=username,password=password)
-            print(information)
+            # calls a function to check if the login information is correct
             snackbar = check_login(information)
             if snackbar.colour == green:
                 session['username'] = username
-                return redirect(url_for("main", snackbar_message=snackbar.message)) # redirect to home
+                return redirect(url_for("main", snackbar_message=snackbar.message)) 
+                # redirect to homepage if login works
             else:
+                # send error message if login doesn't work
                 return render_template("login.html",loggedin=False, snackbar = snackbar, username = username)
     else:
         if check_if_session() != None:
             if request.args.get('snackbar_message','') != None:
+                # checks for snackbar message and displays snackbar accordingly
                 snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
                 need_snackbar=True,colour=request.args.get('snackbar_colour','')))
                 username = request.args.get('username', '')
@@ -69,35 +80,47 @@ def login():
                 username = ""
             return render_template("login.html",loggedin=False, snackbar = snackbar, username = username)
         else:
+            # if already logged in redirect to home page
             return redirect(url_for("main",snackbar_message="Already Logged In"))
 
+#signup page
 @app.route("/signup",methods=["GET","POST"])
 def signup():
-    if request.method == "POST": # user sending a request to the server
+    if request.method == "POST": 
+        # user sending a request to the server
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         first_name = request.form['firstname']
         last_name = request.form['lastname']
+        # gets all information from form
         info_signup = signup_information(username=username, password=password, email=email,first_name=first_name,last_name=last_name)
+        # calls function to create new user
         snackbar = create_new_user(info_signup)
-        if snackbar.colour == green: # if signup successful goes to login page
+        if snackbar.colour == green: 
+            # if signup successful goes to login page
             return redirect(url_for("login", snackbar_message=snackbar.message,username=info_signup.username,snackbar_colour=green))
         else:
+            # if signup unsuccessful stays on signup page
             return render_template("signup.html", loggedin=False, snackbar = snackbar, info = info_signup)
     else:
         if 'username' in session:
+            # if already logged in redirect user to home page
             return redirect(url_for("main",snackbar_message="Already Logged In"))
         else:
             info_signup = signup_information(username="", password="", email="",first_name="",last_name="")
             return render_template("signup.html", loggedin=False, info = info_signup)
 
+# email verification page
 @app.route("/emailverification/<key>")
 def email_verification(key):
+    # calls function to check if key works
     check_if_verified = verify_user_by_email_verification_key(key)
     if check_if_verified == True:
+        # if works takes to email verified page
         return render_template("email_verified.html",loggedin=False)
     else:
+        # if does not work takes to email not verified page
         return render_template("email_not_verified.html",loggedin=False)
 
 @app.route("/journal")
@@ -145,16 +168,21 @@ def journal_id(id):
         else:
             return redirect(url_for('journal', snackbar_message="You do not have access to this journal", snackbar_colour=red))
 
+# new journal route
 @app.route('/new_journal')
 def new_journal():
+    # check if logged in
     in_session = check_if_session()
     if in_session is not None:
         return in_session
     else:
+        # create a new journal for the user
         current_journal = create_new_journal_by_username(session['username'])
-        return redirect(url_for('journal_id', id=current_journal.id))
-    # redirect to journals page for new journal
 
+        # redirect to journals page for new journal created
+        return redirect(url_for('journal_id', id=current_journal.id))
+
+# deleting journal route
 @app.route('/delete_journal/<id>')
 def delete_journal(id):
     in_session = check_if_session()
@@ -169,8 +197,11 @@ def delete_journal(id):
         else: # if does not have access to delete this journal
             snackbar_message = "You do not have access to this journal"
             snackbar_colour = red
+    # goes to the main journal page and displays a snackbar which says whether the user
+    # has successfully deleted the journal
         return redirect(url_for('journal', snackbar_message=snackbar_message, snackbar_colour=snackbar_colour))
 
+# main daily tracker page route
 @app.route("/daily_tracker")
 def daily_tracker():
     in_session = check_if_session()
@@ -179,8 +210,11 @@ def daily_tracker():
     else:
         daily_trackers = get_daily_trackers_by_username(username=session['username'])
         for daily_tracker in daily_trackers:
+            # converts date into readable format
             daily_tracker.date = datetime.strptime(daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
         if request.args.get('snackbar_message','') != None:
+            # gets snackbar and according to the if statement works out the format
+            # it should be in
             snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
             need_snackbar=True,colour=request.args.get('snackbar_colour','')))
         else:
@@ -198,7 +232,6 @@ def daily_tracker_id(id):
                 # checks if user is allowed to access this daily_tracker
                 current_daily_tracker = get_daily_tracker_by_id(daily_tracker_id=id)
                 current_daily_tracker.date = datetime.strptime(current_daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
-                print(current_daily_tracker)
                 return render_template("daily_tracker.html",daily_tracker=current_daily_tracker)
             else:
                 return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))
@@ -207,7 +240,6 @@ def daily_tracker_id(id):
             # Get JSON data sent from the frontend
             data = request.get_json()
             # Validate incoming data
-            print(data)
             if ("comment" not in data or "mood_score" not in data or "bed_time" not in data or 
                 "wakeup_time" not in data  or "meditation_mins" not in data  or "prodcutive_mins" not in data
                  or "exercise_mins" not in data):
@@ -270,7 +302,7 @@ def display_scatter_graph(grouptype):
             data = calculate_mood_exercise_on_username(session['username'])
         elif grouptype == 'meditation': # for meditation type
             data = calculate_mood_meditation_on_username(session['username'])
-        elif grouptype == 'productive': # for productive type
+        elif grouptype == 'productivity': # for productive type
             data = calculate_mood_productive_on_username(session['username'])
         elif grouptype == 'sleep': # for sleep type
             data = calculate_mood_sleep_on_username(session['username'])
@@ -303,13 +335,54 @@ def display_day(date):
         return in_session
     else:
         daily_tracker = get_daily_trackers_by_username_date(session['username'],date)
-        print(daily_tracker)
         if daily_tracker == False:
             snackbar = (Snackbar(message='No daily tracker available for this day',
             need_snackbar = True,colour = red))
             return render_template("calendar.html", snackbar=snackbar)
         else:
             return redirect(url_for('daily_tracker_id', id=daily_tracker.id))
+
+# code for a single meditation page
+@app.route("/meditation/<id>")
+def meditation(id):
+    if 'username' in session:
+        loggedin = True
+    else:
+        loggedin = False
+    # get meditation from current id
+    curmeditation = get_meditation_by_id(id)
+    # if there aren't any meditations with this id
+    if curmeditation == False:
+        return render_template("meditation_search.html", searchvalue="",
+            meditations = get_all_meditations(), snackbar = Snackbar(need_snackbar=True,
+                colour = orange, message= "Meditation Does Not Exist"))
+    filename = url_for('static', filename=f"audio/{curmeditation.filename}")
+    # adds filename for meditation audio file
+    return render_template("meditation.html", meditation=curmeditation,
+    audio_file = filename, loggedin=loggedin)
+
+# page which shows all meditations
+@app.route("/meditation_search/")
+@app.route("/meditation_search")
+def all_meditations():
+    if 'username' in session:
+        loggedin = True
+    else:
+        loggedin = False
+    meditations = get_all_meditations()
+    # this will be an array of meditationClassifiers
+    return render_template("meditation_search.html",loggedin=loggedin, searchvalue="", meditations = meditations)
+
+# page which shows meditations when searched for
+@app.route("/meditation_search/<searchkey>")
+def meditation_search(searchkey):
+    if 'username' in session:
+        loggedin = True
+    else:
+        loggedin = False
+    meditations = search_meditation_on_key(searchkey)
+    # this will be an array of meditationClassifiers
+    return render_template("meditation_search.html",loggedin=loggedin, searchvalue=searchkey, meditations = meditations)
 
 @app.route('/logout')
 def logout():

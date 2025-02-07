@@ -1,0 +1,135 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container for Meditations - Flexbox for horizontal layout */
+.meditation-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap into multiple lines */
+    gap: 40px; /* Space between each meditation */
+    margin: 20px auto;
+    max-width: 1200px; /* Max width for the layout */
+    width: 90%;
+    box-sizing: border-box;
+}
+
+/* Individual Meditation Card Styling */
+.meditation-loop {
+    background: #ffffff; /* White background */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px;
+    width: 30%; /* Set width to 30% to allow 3 items per row */
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center; /* Center content inside */
+}
+
+/* Hover Effect for Meditation Cards */
+.meditation-loop:hover {
+    transform: scale(1.02); /* Slight zoom effect */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Darker shadow */
+}
+
+/* Meditation Titles */
+.meditation-loop h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+/* Meditation Dates */
+.meditation-loop p {
+    font-size: 14px;
+    color: #777;
+    margin: 0 0 20px 0;
+}
+
+/* Listen to Meditation Link */
+.meditation-loop a.edit-link {
+    font-size: 16px;
+    color: #0077cc; /* Blue text */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Listen Link Hover */
+.meditation-loop a.edit-link:hover {
+    text-decoration: underline;
+    color: #005fa3; /* Darker blue on hover */
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .meditation-loop {
+        width: 48%; /* 2 items per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .meditation-loop {
+        width: 100%; /* 1 item per row on very small screens */
+    }
+}
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category {
+    background: #e0e0e0;
+    padding: 5px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+}
+/* Search Bar Container */
+.search-container {
+    display: flex;
+    justify-content: center; /* Centers the search bar */
+    margin: 20px auto;
+    width: 100%;
+}
+
+/* Search Input */
+#search {
+    width: 40%; /* Adjust as needed */
+    max-width: 400px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 25px; /* Rounded edges */
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    margin: 0 auto;
+}
+
+/* Search Bar Focus Effect */
+#search:focus {
+    border-color: #0077cc; /* Blue border on focus */
+    box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
+}
+
+/* Search Bar Placeholder Styling */
+#search::placeholder {
+    color: #999;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #search {
+        width: 60%;
+    }
+}
+
+@media (max-width: 480px) {
+    #search {
+        width: 80%;
+    }
+}

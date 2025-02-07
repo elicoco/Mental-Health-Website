@@ -1,0 +1,27 @@
+{% extends "template.html" %}
+
+{% block title %}
+Meditation
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/meditation.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <h1>{{ meditation.name }}</h1>
+
+    <div class="categories">
+        {% for type in meditation.type %}
+        <span class="category">{{ type }}</span>
+        {% endfor %}
+    </div>
+
+    <audio controls>
+        <source src="{{ audio_file }}" type="audio/mpeg">
+    </audio>
+</div>
+
+{% endblock %}
