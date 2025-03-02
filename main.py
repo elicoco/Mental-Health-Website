@@ -8,12 +8,11 @@ from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journalid, get_journals_by_username, update_journal_by_id
 from Backend.database.login import check_login
-from Backend.custom.customclasses import Journal, Snackbar, input_login, meditationClassifier, signup_information
+from Backend.custom.customclasses import Snackbar, input_login, signup_information
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
 from Backend.meditations.search_meditations import get_all_meditations, get_meditation_by_id, search_meditation_on_key
 
 load_dotenv()
-
 app = Flask(__name__)
 app.secret_key = os.getenv('APPSECRETKEY')
 app.config['SESSION_TYPE'] = 'filesystem'

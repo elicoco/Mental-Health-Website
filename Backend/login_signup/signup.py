@@ -1,8 +1,4 @@
 import string
-from Backend.custom.customclasses import signup_information
-import sqlite3
-#from hash import password_hash
-
 
 def password_strong(password: str):
     symbols = set(string.punctuation) 

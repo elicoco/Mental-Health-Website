@@ -1,5 +1,3 @@
-import random
-from typing import List
 from Backend.custom.customclasses import meditationClassifier
 
 meditationClassifiers = [
