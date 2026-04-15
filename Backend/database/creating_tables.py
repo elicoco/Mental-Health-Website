@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2 import pool
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,16 +8,18 @@ DATABASE_URL = os.getenv('DATABASE_PUBLIC_URL') or os.getenv('DATABASE_URL', '')
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 if '.railway.internal' in DATABASE_URL:
-    raise RuntimeError(f"DATABASE_URL is set to an internal Railway hostname. Set DATABASE_PUBLIC_URL or DATABASE_URL to the public URL.")
+    raise RuntimeError("DATABASE_URL is set to an internal Railway hostname. Set DATABASE_PUBLIC_URL or DATABASE_URL to the public URL.")
+
+connection_pool = pool.SimpleConnectionPool(1, 10, DATABASE_URL)
 
 def start_database():
-    connect = psycopg2.connect(DATABASE_URL)
+    connect = connection_pool.getconn()
     cursor = connect.cursor()
     return cursor, connect
 
 def close_database(cursor, conn):
     cursor.close()
-    conn.close()
+    connection_pool.putconn(conn)
 
 def create_all_tables():
     cursor, conn = start_database()

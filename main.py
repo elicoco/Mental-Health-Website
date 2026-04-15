@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
+from flask_compress import Compress
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
@@ -25,6 +26,7 @@ app.config['WTF_CSRF_TIME_LIMIT'] = None
 Session(app)
 csrf = CSRFProtect(app)
 limiter = Limiter(get_remote_address, app=app, default_limits=[])
+Compress(app)
 green = "#4CAF50"
 red = "#F44336"
 blue = "#2196F3"
@@ -391,6 +393,10 @@ def meditation_search(search_key):
     meditations = search_meditation_on_key(search_key)
     # this will be an array of meditationClassifiers
     return render_template("meditation_search.html",loggedin=logged_in, searchvalue=search_key, meditations = meditations)
+
+@app.route('/health')
+def health():
+    return {"status": "ok"}, 200
 
 @app.errorhandler(404)
 def page_not_found(e):
