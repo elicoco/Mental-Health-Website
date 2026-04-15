@@ -16,7 +16,7 @@ from Backend.database.signup import create_new_user, verify_user_by_email_verifi
 from Backend.meditations.search_meditations import get_all_meditations, get_meditation_by_id, search_meditation_on_key
 
 load_dotenv()
-app = Flask(__name__)
+app = Flask(__name__, static_folder='Static')
 app.secret_key = os.getenv('APPSECRETKEY')
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './flask_session/'
