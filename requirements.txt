@@ -9,4 +9,5 @@ numpy==2.4.1
 psycopg2-binary==2.9.11
 python-dotenv==1.2.1
 scikit-learn==1.8.0
+scipy==1.15.3
 sendgrid==6.12.5

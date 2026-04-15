@@ -1,5 +1,6 @@
 from typing import List, Dict
 import numpy as np
+from scipy import stats as scipy_stats
 from sklearn.linear_model import LinearRegression
 from Backend.custom.customclasses import CorrelationStats
 from Backend.database.creating_tables import close_database, start_database
@@ -7,18 +8,19 @@ from Backend.database.creating_tables import close_database, start_database
 def calculate_data(name_x: str, name_y: str, points: List[Dict[str, float]]) -> CorrelationStats:
     data_x = [point["x"] for point in points]
     data_y = [point["y"] for point in points]
-    data_x = np.array(data_x).reshape(-1, 1)
+    data_x_flat = np.array(data_x)
     data_y = np.array(data_y)
-    mean_x = np.mean(data_x)
-    mean_y = np.mean(data_y)
-    numerator = np.sum((data_x.flatten() - mean_x) * (data_y - mean_y))
-    denominator = np.sqrt(np.sum((data_x.flatten() - mean_x) ** 2) * np.sum((data_y - mean_y) ** 2))
-    pmcc = numerator / denominator if denominator != 0 else 0.0
+
+    if len(points) >= 3:
+        pmcc, p_value = scipy_stats.pearsonr(data_x_flat, data_y)
+    else:
+        pmcc, p_value = 0.0, 1.0
+
     model = LinearRegression()
-    model.fit(data_x, data_y)
+    model.fit(data_x_flat.reshape(-1, 1), data_y)
     coef = model.coef_[0]
     intercept = model.intercept_
-    stats = CorrelationStats(name_x, name_y, float(pmcc), float(coef), float(intercept), points=points)
+    stats = CorrelationStats(name_x, name_y, float(pmcc), float(coef), float(intercept), points=points, p_value=float(p_value))
     return stats
 
 def calculate_mood_exercise_on_username(username: str):

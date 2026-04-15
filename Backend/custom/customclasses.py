@@ -21,16 +21,14 @@ class Journal:
     daily_tracker_id: int
 
 class CorrelationStats:
-    def __init__(self, xname, yname, pmcc, slope, intercept, points):
+    def __init__(self, xname, yname, pmcc, slope, intercept, points, p_value=1.0):
         self.xname = xname
         self.yname = yname
         self.pmcc = pmcc
         self.slope = slope
         self.intercept = intercept
         self.points = points
-    # allows all points to be defined
-    # as a list of dictionaries, with
-    # x and y being floats
+        self.p_value = p_value
 
     def to_dict(self):
         return {
@@ -40,6 +38,7 @@ class CorrelationStats:
             "slope": self.slope,
             "intercept": self.intercept,
             "points": self.points,
+            "p_value": self.p_value,
         }
     # this returns all the data as a dictionary 
 @dataclass
