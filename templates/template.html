@@ -58,7 +58,7 @@
         <div id="main_page">
             {% block main %}
             {% endblock %}
-            <script src="{{ url_for('static', filename='js/snackbar.js') }}"></script> 
+            <script src="{{ url_for('static', filename='JS/snackbar.js') }}"></script> 
             {% if snackbar is defined and snackbar.need_snackbar == True %}
             <script>
                 const snackbar = {
