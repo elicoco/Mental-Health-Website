@@ -69,20 +69,23 @@
 #mood-slider {
     width: 200px;
 }
-.dropdown-container {
+.time-picker-row {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 12px;
 }
-.dropdown {
-    font-size: 1rem;
-    padding: 5px;
+
+.time-picker {
+    font-size: 1.1rem;
+    padding: 6px 10px;
     border: 2px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
     transition: border-color 0.3s;
+    cursor: pointer;
 }
-.dropdown:focus {
+
+.time-picker:focus {
     border-color: #4caf50;
     outline: none;
 }

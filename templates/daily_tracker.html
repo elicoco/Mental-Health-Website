@@ -39,68 +39,22 @@ Daily Tracker
         </div>
     </div>
     <input type="hidden" id="daily-tracker-id" value="{{ daily_tracker.id }}">
-    <input type="hidden" id="wakeup-time" value="{{ daily_tracker.wakeup_time }}">
-    <input type="hidden" id="bed-time" value="{{ daily_tracker.bed_time }}">
 </div>
 <div class="div50width">
     <h1>Time Log</h1>
     <br>
-    <div class="dropdown-container bedtime">
-        <label class="label">Bedtime:</label>
-        <select id="bedtime-hour" class="dropdown">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-        </select>        
-        :
-        <select id="bedtime-minute" class="dropdown">
-            <option value="00">00</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-        </select>
-        <select id="bedtime-period" class="dropdown">
-            <option value="AM">AM</option>
-            <option value="PM" selected>PM</option>
-        </select>
+    {% set bed_h = daily_tracker.bed_time | int %}
+    {% set bed_m = ((daily_tracker.bed_time - bed_h) * 60) | round | int %}
+    {% set wake_h = daily_tracker.wakeup_time | int %}
+    {% set wake_m = ((daily_tracker.wakeup_time - wake_h) * 60) | round | int %}
+    <div class="time-picker-row">
+        <label for="bedtime-input" class="label">Bedtime:</label>
+        <input type="time" id="bedtime-input" class="time-picker" value="{{ '%02d:%02d' | format(bed_h, bed_m) }}">
     </div>
     <br>
-    <div class="dropdown-container wakeup">
-        <label class="label">Wakeup Time:</label>
-        <select id="wakeup-hour" class="dropdown">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-        </select>        
-        :
-        <select id="wakeup-minute" class="dropdown">
-            <option value="00">00</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-        </select>
-        <select id="wakeup-period" class="dropdown">
-            <option value="AM">AM</option>
-            <option value="PM" selected>PM</option>
-        </select>
+    <div class="time-picker-row">
+        <label for="wakeup-input" class="label">Wakeup:</label>
+        <input type="time" id="wakeup-input" class="time-picker" value="{{ '%02d:%02d' | format(wake_h, wake_m) }}">
     </div>
     <br>
     <p id="sleep-hours"></p>
