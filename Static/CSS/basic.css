@@ -178,3 +178,39 @@ a {
 a:hover {
     color: #4CAF50;
 }
+
+[contenteditable][data-placeholder]:empty:before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    pointer-events: none;
+}
+
+#track-today-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background-color: #FFF9C4;
+    border: 1px solid #F9A825;
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin: 24px auto;
+    max-width: 500px;
+    font-size: 16px;
+    color: #5D4037;
+}
+
+#track-today-banner a {
+    background-color: #F9A825;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+#track-today-banner a:hover {
+    opacity: 0.85;
+    color: white;
+}

@@ -1,0 +1,103 @@
+{% extends "template.html" %}
+
+{% block title %}
+Manage Habits
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/habits.css') }}">
+{% endblock %}
+
+{% block main %}
+<div class="habits-page">
+    <h1>Manage Habits</h1>
+
+    <section class="habits-section-block">
+        <h2>Active Habits</h2>
+        {% set active = habits | selectattr("is_active") | list %}
+        {% if active %}
+        <div class="habit-cards">
+            {% for habit in active %}
+            <div class="habit-card active">
+                <div class="habit-card-header">
+                    <span class="habit-card-name">{{ habit.name }}</span>
+                    <div class="habit-streaks">
+                        <span class="streak current" title="Current streak">🔥 {{ habit.current_streak }}</span>
+                        <span class="streak longest" title="Longest streak">🏆 {{ habit.longest_streak }}</span>
+                    </div>
+                </div>
+                <div class="habit-periods">
+                    {% for p in habit.periods %}
+                    <span class="period-tag">
+                        {{ p.start.strftime('%d %b %Y') }} – {% if p.end %}{{ p.end.strftime('%d %b %Y') }}{% else %}<em>present</em>{% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="{{ url_for('end_habit_route', habit_id=habit.id) }}" class="habit-action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="end-date-{{ habit.id }}">End date:</label>
+                    <input type="date" id="end-date-{{ habit.id }}" name="end_date" value="{{ today }}">
+                    <button type="submit" class="btn btn-end">End Habit</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-msg">No active habits. Add one below.</p>
+        {% endif %}
+    </section>
+
+    <section class="habits-section-block">
+        <h2>Inactive Habits</h2>
+        {% set inactive = habits | rejectattr("is_active") | list %}
+        {% if inactive %}
+        <div class="habit-cards">
+            {% for habit in inactive %}
+            <div class="habit-card inactive">
+                <div class="habit-card-header">
+                    <span class="habit-card-name">{{ habit.name }}</span>
+                    <div class="habit-streaks">
+                        <span class="streak longest" title="Longest streak">🏆 {{ habit.longest_streak }}</span>
+                    </div>
+                </div>
+                <div class="habit-periods">
+                    {% for p in habit.periods %}
+                    <span class="period-tag">
+                        {{ p.start.strftime('%d %b %Y') }} – {% if p.end %}{{ p.end.strftime('%d %b %Y') }}{% else %}<em>present</em>{% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="habit-actions">
+                    <form method="POST" action="{{ url_for('resume_habit_route', habit_id=habit.id) }}" class="habit-action-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <label for="resume-date-{{ habit.id }}">Resume from:</label>
+                        <input type="date" id="resume-date-{{ habit.id }}" name="start_date" value="{{ today }}">
+                        <button type="submit" class="btn btn-resume">Resume</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('delete_habit_route', habit_id=habit.id) }}" class="habit-action-form delete-form"
+                          onsubmit="return confirm('Permanently delete ' + {{ habit.name | tojson }} + ' and all its logs?')">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-delete">Delete Permanently</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-msg">No inactive habits.</p>
+        {% endif %}
+    </section>
+
+    <section class="habits-section-block add-section">
+        <h2>Add New Habit</h2>
+        <form method="POST" action="{{ url_for('add_habit_route') }}" class="add-habit-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="text" name="name" placeholder="Habit name..." class="add-habit-input" required maxlength="100" autocomplete="off">
+            <label for="new-habit-date">Start date:</label>
+            <input type="date" id="new-habit-date" name="start_date" value="{{ today }}">
+            <button type="submit" class="btn btn-add">Add Habit</button>
+        </form>
+    </section>
+</div>
+
+{% endblock %}

@@ -66,7 +66,8 @@ def calculate_mood_sleep_on_username(username: str):
     cursor, conn = start_database()
     cursor.execute('''SELECT bed_time, wakeup_time, mood_score FROM Daily_Tracker
             INNER JOIN Users on Users.id = Daily_Tracker.user_id
-            WHERE Users.username = %s and Daily_Tracker.in_use = 1''', (username,))
+            WHERE Users.username = %s and Daily_Tracker.in_use = 1
+            AND bed_time IS NOT NULL AND wakeup_time IS NOT NULL''', (username,))
     stats = cursor.fetchall()
     points = [{"x": calculate_hours(float(bedtime), float(wakeup)), "y": y} for bedtime, wakeup, y in stats]
     correlation_stats = calculate_data('Sleep Hours', 'Mood', points)

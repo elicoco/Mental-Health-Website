@@ -13,26 +13,26 @@ Signup
 <form id = "signup-form" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label for="username">Username: </label>
-    <input type="text" required name="username" value="{{ info.username }}"/>
+    <input type="text" required name="username" id="username" autocomplete="username" value="{{ info.username }}"/>
     <div class="name-row">
         <!-- First Name -->
         <div class="form-group">
             <label for="firstname">First Name:</label>
-            <input type="text" required name="firstname" value="{{ info.first_name }}" />
+            <input type="text" required name="firstname" id="firstname" autocomplete="given-name" value="{{ info.first_name }}" />
         </div>
         <!-- Last Name -->
         <div class="form-group">
             <label for="lastname">Last Name:</label>
-            <input type="text" required name="lastname" value="{{ info.last_name }}" />
+            <input type="text" required name="lastname" id="lastname" autocomplete="family-name" value="{{ info.last_name }}" />
         </div>
     </div>
     <label for="email">Email: </label>
-    <input type="text" required name="email" value="{{ info.email }}"/>
+    <input type="text" required name="email" id="email" autocomplete="email" value="{{ info.email }}"/>
     <label for="password">Password: </label>
-    <input id = "password" type="password" required name="password"/>
+    <input id="password" type="password" required name="password" autocomplete="new-password"/>
     <small class="hint-text">Use at least 8 characters with letters, numbers, and symbols.</small>
     <label for="re-enter-password">Re-enter Password: </label>
-    <input id = "re-enter-password" type="password" required name="re-enter-password"/>
+    <input id="re-enter-password" type="password" required name="re-enter-password" autocomplete="new-password"/>
     <button type="submit">Submit</button>
 </form>
 <script>

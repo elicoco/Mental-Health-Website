@@ -22,32 +22,39 @@ function cancelEdit() {
     }
 }
 
-function saveJournal(){
+function saveJournal(silent = false){
     const journalData = {
         title: document.getElementById('journal-title').innerText,
         content: document.getElementById('journal-content').innerText
     };
-    if (journalData.title == "Add Title" || journalData.content == "Add Content"){
-        showSnackbar("Journal could not be saved: Title or Content is missing", orange);
-    } else {
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify(journalData)
-        })
-        .then(response => {
-            if (response.ok){
-                showSnackbar("Journal Successfully Saved", green);
-            } else {
-                showSnackbar("Failed to save journal, please try again", red);
-            }
-        })
-        .catch(() => showSnackbar("Failed to save journal, please try again", red));
-    }
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(journalData)
+    })
+    .then(response => {
+        if (response.ok){
+            if (!silent) showSnackbar("Journal Successfully Saved", green);
+        } else {
+            showSnackbar("Failed to save journal, please try again", red);
+        }
+    })
+    .catch(() => showSnackbar("Failed to save journal, please try again", red));
 }
+
+let autoSaveTimer;
+function triggerAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => saveJournal(true), 1500);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('journal-title').addEventListener('input', triggerAutoSave);
+    document.getElementById('journal-content').addEventListener('input', triggerAutoSave);
+});
 
 function deleteJournal(){
     var journalId = document.getElementById("journal-id").value;

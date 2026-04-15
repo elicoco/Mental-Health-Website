@@ -11,6 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_daily_tracker_for_date, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journal_id, get_journals_by_username, update_journal_by_id
+from Backend.database.habits import add_habit, delete_habit_permanently, end_habit, get_all_habits_for_user, get_habits_with_completion, resume_habit, toggle_habit_log
 from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
@@ -54,7 +55,9 @@ def main():
             snackbar = Snackbar(message=request.args.get('snackbar_message', ''),need_snackbar=True,colour=green)
         else:
             snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
-        return render_template("home.html", snackbar=snackbar, username = session['username'])
+        today = datetime.now().strftime("%Y-%m-%d")
+        tracked_today = bool(get_daily_trackers_by_username_date(session['username'], today))
+        return render_template("home.html", snackbar=snackbar, username=session['username'], tracked_today=tracked_today, today=today)
 
 # login page
 @app.route("/login",methods=["GET","POST"])
@@ -79,9 +82,10 @@ def login():
                 return render_template("login.html",loggedin=False, snackbar = snackbar, username = username)
     else:
         if require_login() is not None:
-            if request.args.get('snackbar_message', '') is not None:
+            snackbar_message = request.args.get('snackbar_message', '')
+            if snackbar_message != '':
                 # checks for snackbar message and displays snackbar accordingly
-                snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
+                snackbar = (Snackbar(message=snackbar_message,
                 need_snackbar=True,colour=request.args.get('snackbar_colour','')))
                 username = request.args.get('username', '')
             else:
@@ -142,8 +146,9 @@ def journal():
         journals = get_journals_by_username(username=session['username'])
         for current_journal in journals:
             current_journal.date_created = datetime.strptime(current_journal.date_created, "%Y-%m-%d").strftime("%B %d, %Y")
-        if request.args.get('snackbar_message', '') is not None:
-            snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
+        snackbar_message = request.args.get('snackbar_message', '')
+        if snackbar_message != '':
+            snackbar = (Snackbar(message=snackbar_message,
             need_snackbar=True,colour=request.args.get('snackbar_colour','')))
         else:
             snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
@@ -222,10 +227,9 @@ def daily_tracker():
         for current_daily_tracker in daily_trackers:
             # converts date into readable format
             current_daily_tracker.date = datetime.strptime(current_daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
-        if request.args.get('snackbar_message', '') is not None:
-            # gets snackbar and according to the if statement works out the format
-            # it should be in
-            snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
+        snackbar_message = request.args.get('snackbar_message', '')
+        if snackbar_message != '':
+            snackbar = (Snackbar(message=snackbar_message,
             need_snackbar=True,colour=request.args.get('snackbar_colour','')))
         else:
             snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
@@ -241,8 +245,11 @@ def daily_tracker_id(id):
             if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
                 # checks if user is allowed to access this daily_tracker
                 current_daily_tracker = get_daily_tracker_by_id(daily_tracker_id=id)
-                current_daily_tracker.date = datetime.strptime(current_daily_tracker.date, "%Y-%m-%d").strftime("%B %d, %Y")
-                return render_template("daily_tracker.html",daily_tracker=current_daily_tracker)
+                raw_date = current_daily_tracker.date
+                habits = get_habits_with_completion(session['username'], raw_date)
+                current_daily_tracker.date = datetime.strptime(raw_date, "%Y-%m-%d").strftime("%B %d, %Y")
+                return render_template("daily_tracker.html", daily_tracker=current_daily_tracker,
+                                       habits=habits, raw_date=raw_date)
             else:
                 return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))
     elif request.method == "POST":
@@ -268,6 +275,66 @@ def daily_tracker_id(id):
             return {"message": "Daily Tracker updated successfully"}, 200
         else: # if user is not allowed access to this daily tracker
             return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))
+
+@app.route('/habits')
+def habits_page():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    habits = get_all_habits_for_user(session['username'])
+    today = datetime.now().strftime('%Y-%m-%d')
+    snackbar_message = request.args.get('snackbar_message', '')
+    snackbar_colour = request.args.get('snackbar_colour', green)
+    snackbar = Snackbar(need_snackbar=bool(snackbar_message), colour=snackbar_colour, message=snackbar_message)
+    return render_template('habits.html', habits=habits, today=today, snackbar=snackbar)
+
+@app.route('/habits/add', methods=['POST'])
+def add_habit_route():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    name = request.form.get('name', '').strip()
+    start_date = request.form.get('start_date', datetime.now().strftime('%Y-%m-%d'))
+    if name:
+        add_habit(session['username'], name, start_date)
+    return redirect(url_for('habits_page'))
+
+@app.route('/habits/<int:habit_id>/end', methods=['POST'])
+def end_habit_route(habit_id):
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    end_date = request.form.get('end_date', datetime.now().strftime('%Y-%m-%d'))
+    end_habit(habit_id, end_date, session['username'])
+    return redirect(url_for('habits_page'))
+
+@app.route('/habits/<int:habit_id>/resume', methods=['POST'])
+def resume_habit_route(habit_id):
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    start_date = request.form.get('start_date', datetime.now().strftime('%Y-%m-%d'))
+    resume_habit(habit_id, start_date, session['username'])
+    return redirect(url_for('habits_page'))
+
+@app.route('/habits/<int:habit_id>/delete', methods=['POST'])
+def delete_habit_route(habit_id):
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    delete_habit_permanently(habit_id, session['username'])
+    return redirect(url_for('habits_page'))
+
+@app.route('/toggle_habit', methods=['POST'])
+def toggle_habit_route():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect, 401
+    data = request.get_json()
+    if 'habit_id' not in data or 'date' not in data:
+        return {"error": "Invalid data"}, 400
+    completed = toggle_habit_log(data['habit_id'], data['date'], session['username'])
+    return {"completed": completed}, 200
 
 @app.route('/new_daily_tracker')
 def new_daily_tracker():

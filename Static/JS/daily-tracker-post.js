@@ -51,37 +51,39 @@ function getBedTime(){
     return hour + (minute / 60);
 }
 
-function saveDailyTracker(){
+function saveDailyTracker(silent = false){
     showSleepHours();
     const dailyTrackerData = {
         comment: document.getElementById('daily-tracker-comment').innerText,
-        mood_score: document.getElementById('mood-display').innerText,
+        mood_score: parseInt(document.getElementById('mood-display').innerText),
         wakeup_time: getWakeupTime(),
         bed_time: getBedTime(),
         exercise_mins: document.getElementById('exercise-mins-input').value || 0,
         productive_mins: document.getElementById('productive-mins-input').value || 0,
         meditation_mins: document.getElementById('meditation-mins-input').value || 0
     };
-    if (dailyTrackerData.comment == "Add a comment" || dailyTrackerData.comment == ""){
-        showSnackbar("Daily Tracker could not be saved: Comment is missing", orange);
-    } else {
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify(dailyTrackerData)
-        })
-        .then(response => {
-            if (response.ok){
-                showSnackbar("Daily Tracker Successfully Saved", green);
-            } else {
-                showSnackbar("Failed to save, please try again", red);
-            }
-        })
-        .catch(() => showSnackbar("Failed to save, please try again", red));
-    }
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(dailyTrackerData)
+    })
+    .then(response => {
+        if (response.ok){
+            if (!silent) showSnackbar("Daily Tracker Successfully Saved", green);
+        } else {
+            showSnackbar("Failed to save, please try again", red);
+        }
+    })
+    .catch(() => showSnackbar("Failed to save, please try again", red));
+}
+
+let autoSaveTimer;
+function triggerAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => saveDailyTracker(true), 1500);
 }
 
 function deleteDailyTracker(){
@@ -107,10 +109,16 @@ function showSleepHours(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('daily-tracker-comment').addEventListener('input', triggerAutoSave);
+    document.getElementById('mood-slider').addEventListener('input', triggerAutoSave);
+    document.getElementById('exercise-mins-input').addEventListener('input', triggerAutoSave);
+    document.getElementById('productive-mins-input').addEventListener('input', triggerAutoSave);
+    document.getElementById('meditation-mins-input').addEventListener('input', triggerAutoSave);
+
     const bedtimeElements = document.querySelectorAll("#bedtime-hour, #bedtime-minute, #bedtime-period");
     const wakeupElements = document.querySelectorAll("#wakeup-hour, #wakeup-minute, #wakeup-period");
-    const allElements = [...bedtimeElements, ...wakeupElements];
-    allElements.forEach((element) => {
-        element.addEventListener("change", showSleepHours);
+    [...bedtimeElements, ...wakeupElements].forEach(el => {
+        el.addEventListener("change", showSleepHours);
+        el.addEventListener("change", triggerAutoSave);
     });
 });

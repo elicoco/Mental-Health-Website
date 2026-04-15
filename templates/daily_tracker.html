@@ -30,7 +30,7 @@ Daily Tracker
     </div>
     <div class="bottomdiv">
         <h2>Comment</h2>
-        <p id="daily-tracker-comment" contenteditable="true">{{daily_tracker.comment}}</p>
+        <p id="daily-tracker-comment" contenteditable="true" data-placeholder="Add a comment...">{% if daily_tracker.comment != 'Add a comment' %}{{daily_tracker.comment}}{% endif %}</p>
         <br>
         <div class="buttons">
             <button id="save-button" onclick="saveDailyTracker()" aria-label="Save Daily Tracker">Save</button>
@@ -46,7 +46,7 @@ Daily Tracker
     <h1>Time Log</h1>
     <br>
     <div class="dropdown-container bedtime">
-        <label for="bedtime" class="label">Bedtime:</label>
+        <label class="label">Bedtime:</label>
         <select id="bedtime-hour" class="dropdown">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -75,7 +75,7 @@ Daily Tracker
     </div>
     <br>
     <div class="dropdown-container wakeup">
-        <label for="wakeup" class="label">Wakeup Time:</label>
+        <label class="label">Wakeup Time:</label>
         <select id="wakeup-hour" class="dropdown">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -106,47 +106,72 @@ Daily Tracker
     <p id="sleep-hours"></p>
     <br>
     <div class="time-input-container">
-        <label for="minutes-input" class="label">Exercise Minutes:</label>
-        <input 
-            type="number" 
-            id="exercise-mins-input" 
-            class="time-input" 
-            min="0" 
-            max="1440" 
-            step="1" 
-            value="{{ daily_tracker.exercise_mins }}" 
+        <label for="exercise-mins-input" class="label">Exercise Minutes:</label>
+        <input
+            type="number"
+            id="exercise-mins-input"
+            class="time-input"
+            min="0"
+            max="1440"
+            step="1"
+            value="{{ daily_tracker.exercise_mins }}"
         />
     </div>
     <br>
     <div class="time-input-container">
-        <label for="minutes-input" class="label">Prodctive Minutes:</label>
-        <input 
-            type="number" 
-            id="productive-mins-input" 
-            class="time-input" 
-            min="0" 
-            max="1440" 
-            step="1" 
-            value="{{ daily_tracker.productive_mins }}" 
+        <label for="productive-mins-input" class="label">Productive Minutes:</label>
+        <input
+            type="number"
+            id="productive-mins-input"
+            class="time-input"
+            min="0"
+            max="1440"
+            step="1"
+            value="{{ daily_tracker.productive_mins }}"
         />
     </div>
     <br>
     <div class="time-input-container">
-        <label for="minutes-input" class="label">Meditation Minutes:</label>
-        <input 
-            type="number" 
-            id="meditation-mins-input" 
-            class="time-input" 
-            min="0" 
-            max="1440" 
-            step="1" 
-            value="{{ daily_tracker.meditation_mins }}" 
+        <label for="meditation-mins-input" class="label">Meditation Minutes:</label>
+        <input
+            type="number"
+            id="meditation-mins-input"
+            class="time-input"
+            min="0"
+            max="1440"
+            step="1"
+            value="{{ daily_tracker.meditation_mins }}"
         />
     </div>
     
 </div>
-
+<div class="habits-section">
+    <div class="habits-section-header">
+        <h2>Habits</h2>
+        <a href="{{ url_for('habits_page') }}" class="manage-habits-link">Manage</a>
+    </div>
+    {% if habits %}
+    <ul class="habit-list">
+        {% for habit in habits %}
+        <li class="habit-item">
+            <label class="habit-label">
+                <input type="checkbox"
+                    class="habit-checkbox"
+                    data-habit-id="{{ habit.id }}"
+                    data-date="{{ raw_date }}"
+                    {% if habit.completed %}checked{% endif %}
+                >
+                <span class="habit-name {% if habit.completed %}completed{% endif %}">{{ habit.name }}</span>
+            </label>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="no-habits-msg">No active habits. <a href="{{ url_for('habits_page') }}">Add one</a></p>
+    {% endif %}
+</div>
 
 <script src="{{ url_for('static', filename='JS/daily-tracker-post.js') }}"> </script>
+<script src="{{ url_for('static', filename='JS/habits.js') }}"> </script>
 
 {% endblock %}

@@ -12,8 +12,8 @@ Journals
 {% block main %}
 <input type="hidden" id="journal-id" value="{{ journal.id }}">
 <div >
-    <h1 id="journal-title" contenteditable="true">{{journal.title}}</h1>
-    <p id="journal-content" contenteditable="true">{{journal.content}}</p>
+    <h1 id="journal-title" contenteditable="true" data-placeholder="Add a title...">{% if journal.title != 'Add Title' %}{{journal.title}}{% endif %}</h1>
+    <p id="journal-content" contenteditable="true" data-placeholder="Start writing...">{% if journal.content != 'Add Content' %}{{journal.content}}{% endif %}</p>
     <div class="buttons">
         <button id="save-button" onclick="saveJournal()" aria-label="Save Journal">Save</button>
         <button id="cancel-button" onclick="cancelEdit()" aria-label="Cancel Journal">Cancel</button>

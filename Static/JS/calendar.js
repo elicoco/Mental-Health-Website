@@ -32,7 +32,7 @@ function generateCalendar(year, month){
 
     for (let j = 1; j <= startDay; j++){
         const blankDiv = document.createElement("div");
-        blankDiv.classList.add("day.blank");
+        blankDiv.classList.add("day", "blank");
         targetDiv.appendChild(blankDiv);
     }
 

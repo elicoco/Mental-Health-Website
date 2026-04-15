@@ -6,5 +6,11 @@ Home
 
 {% block main %}
 
+{% if not tracked_today %}
+<div id="track-today-banner">
+    <p>You haven't tracked today yet.</p>
+    <a href="{{ url_for('display_day', date=today) }}">Track Now</a>
+</div>
+{% endif %}
 
 {% endblock %}

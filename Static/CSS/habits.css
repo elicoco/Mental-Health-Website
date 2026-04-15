@@ -1,0 +1,162 @@
+.habits-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.habits-page h1 {
+    margin-bottom: 30px;
+}
+
+.habits-section-block {
+    margin-bottom: 40px;
+}
+
+.habits-section-block h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+
+.habit-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.habit-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.habit-card.inactive {
+    opacity: 0.75;
+}
+
+.habit-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.habit-card-name {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.habit-streaks {
+    display: flex;
+    gap: 12px;
+}
+
+.streak {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.habit-periods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.period-tag {
+    font-size: 0.8rem;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: #666;
+}
+
+.habit-action-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.habit-action-form label {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.habit-action-form input[type="date"] {
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.habit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.btn {
+    padding: 7px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.btn-end {
+    background-color: #FBC02D;
+    color: #333;
+}
+
+.btn-resume {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #e53935;
+    color: white;
+}
+
+.btn-add {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.add-section .add-habit-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.add-habit-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.empty-msg {
+    color: #aaa;
+    font-style: italic;
+}
+
+.delete-form {
+    margin-left: auto;
+}

@@ -59,6 +59,41 @@ def create_all_tables():
                    FOREIGN KEY (daily_tracker_id) REFERENCES Daily_Tracker(id) ON DELETE CASCADE
                    )''')
     conn.commit()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Habits
+                   (id SERIAL PRIMARY KEY,
+                   user_id INT NOT NULL,
+                   name TEXT NOT NULL,
+                   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+                   )''')
+    conn.commit()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Habit_Periods
+                   (id SERIAL PRIMARY KEY,
+                   habit_id INT NOT NULL,
+                   start_date DATE NOT NULL,
+                   end_date DATE,
+                   FOREIGN KEY (habit_id) REFERENCES Habits(id) ON DELETE CASCADE
+                   )''')
+    conn.commit()
+    # migrate existing start_date column on Habits into Habit_Periods
+    cursor.execute('''ALTER TABLE Habits ADD COLUMN IF NOT EXISTS start_date DATE''')
+    conn.commit()
+    cursor.execute('''
+        INSERT INTO Habit_Periods (habit_id, start_date)
+        SELECT id, COALESCE(start_date, CURRENT_DATE)
+        FROM Habits
+        WHERE id NOT IN (SELECT habit_id FROM Habit_Periods)
+    ''')
+    conn.commit()
+    cursor.execute('''ALTER TABLE Habits DROP COLUMN IF EXISTS start_date''')
+    conn.commit()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Habit_Logs
+                   (id SERIAL PRIMARY KEY,
+                   habit_id INT NOT NULL,
+                   log_date DATE NOT NULL,
+                   FOREIGN KEY (habit_id) REFERENCES Habits(id) ON DELETE CASCADE,
+                   CONSTRAINT unique_habit_date UNIQUE (habit_id, log_date)
+                   )''')
+    conn.commit()
     close_database(cursor, conn)
 
 create_all_tables()
