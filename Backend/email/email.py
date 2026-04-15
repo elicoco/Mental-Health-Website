@@ -11,9 +11,8 @@ EMAIL = os.getenv('EMAIL')
 APP_PASSWORD = os.getenv('APPPASSWORD') # Use the 16-character App Password
 
 def send_email(subject, body, to):
-    # Set up the server
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
+    # Set up the server using SSL on port 465
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 
     # Login with your email and the App Password
     server.login(EMAIL, APP_PASSWORD)
