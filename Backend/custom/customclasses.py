@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 @dataclass
-class input_login:
+class InputLogin:
     username: str
     password: str
 
 @dataclass
-class signup_information:
+class SignupInformation:
     username: str
     password: str
     email: str
@@ -20,7 +20,7 @@ class Journal:
     id: int
     daily_tracker_id: int
 
-class correlationStats:
+class CorrelationStats:
     def __init__(self, xname, yname, pmcc, slope, intercept, points):
         self.xname = xname
         self.yname = yname
@@ -43,7 +43,7 @@ class correlationStats:
         }
     # this returns all the data as a dictionary 
 @dataclass
-class meditationClassifier: # each meditation has its own classification
+class MeditationClassifier: # each meditation has its own classification
     id: int
     filename: str
     type: list[str] # types of meditation
@@ -56,7 +56,7 @@ class Snackbar:
     colour: str
     message: str
 
-class Daily_Tracker:
+class DailyTracker:
     def __init__(self, id, date, comment="", mood_score=50, bed_time=0, wakeup_time=0, 
                  meditation_mins=0, productive_mins=0, exercise_mins=0):
         self.id = id

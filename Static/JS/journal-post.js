@@ -44,12 +44,12 @@ function saveJournal(){
     }
 }
 function deleteJournal(){
-    var journalid = document.getElementById("journalId").value;
+    var journalId = document.getElementById("journalId").value;
     // gets this from a hidden HTML input value
     var userConfirmed = confirm("Are you sure you want to delete this journal?");
 // checks if user wants to delete the journal
     if (userConfirmed){
-        window.location.href = '/delete_journal/'+ journalid;
+        window.location.href = '/delete_journal/'+ journalId;
     }
 }
 function prompt(){

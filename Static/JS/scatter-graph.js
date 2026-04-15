@@ -1,34 +1,34 @@
-const statsjson = document.querySelector("#stats").value;
-const stats = JSON.parse(statsjson);
-const points = stats.points;
-let hour_moodscoreincrease;
-const groupname = document.querySelector("#name").value.toLowerCase();
-// gets groupname from HTML
-if (groupname == 'sleep'){ // if it's for sleep then it needs update title
+const STATS_JSON = document.querySelector("#stats").value;
+const STATS = JSON.parse(STATS_JSON);
+const points = STATS.points;
+let HOUR_MOOD_SCORE_INCREASE;
+const GROUP_NAME = document.querySelector("#name").value.toLowerCase();
+// gets GROUP_NAME from HTML
+if (GROUP_NAME == 'sleep'){ // if it's for sleep then it needs update title
     document.getElementById("title-graph").textContent = `Mood vs Sleep Hours`;
-    hour_moodscoreincrease = (stats.slope).toFixed(2);
+    HOUR_MOOD_SCORE_INCREASE = (STATS.slope).toFixed(2);
 }
 else{
-    hour_moodscoreincrease = (stats.slope * 60).toFixed(2);
+    HOUR_MOOD_SCORE_INCREASE = (STATS.slope * 60).toFixed(2);
 }
-const pmcc = (stats.pmcc*100).toFixed(1);
-if (pmcc > 0){ // if it is a positive correlation than it will show this in the sentences
-    document.getElementById("correlation-sentence").textContent = `On average, every hour of ${groupname} increased your mood score by 
-    ${hour_moodscoreincrease}`; // sentences to communicate with user
-    document.getElementById("correlation-sentence2").textContent = `Mood and ${groupname} are positively correlated by ${pmcc}%`;
+const PMCC = (STATS.PMCC*100).toFixed(1);
+if (PMCC > 0){ // if it is a positive correlation than it will show this in the sentences
+    document.getElementById("correlation-sentence").textContent = `On average, every hour of ${GROUP_NAME} increased your mood score by
+    ${HOUR_MOOD_SCORE_INCREASE}`; // sentences to communicate with user
+    document.getElementById("correlation-sentence2").textContent = `Mood and ${GROUP_NAME} are positively correlated by ${PMCC}%`;
 }
 else{ // if correlation is negative
-    document.getElementById("correlation-sentence").textContent = `On average, every hour of ${groupname} decreased your mood score by 
-    ${Math.abs(hour_moodscoreincrease)}`; // sentences to communicate with user
-    document.getElementById("correlation-sentence2").textContent = `Mood and ${groupname} are negatively correlated by ${Math.abs(pmcc)}%`;
+    document.getElementById("correlation-sentence").textContent = `On average, every hour of ${GROUP_NAME} decreased your mood score by
+    ${Math.abs(HOUR_MOOD_SCORE_INCREASE)}`; // sentences to communicate with user
+    document.getElementById("correlation-sentence2").textContent = `Mood and ${GROUP_NAME} are negatively correlated by ${Math.abs(PMCC)}%`;
     // absolute value so it is a positive number
 }
 
 
 // Function to create line of best fit 
 function calculateRegressionLine(data) {
-    const slope = stats.slope;
-    const intercept = stats.intercept;
+    const slope = STATS.slope;
+    const intercept = STATS.intercept;
 
     // Generate points for the line of best fit
     const xValues = data.map(point => point.x);
@@ -81,14 +81,14 @@ const config = {
                 position: 'bottom',
                 title: {
                     display: true,
-                    text: stats.xname
+                    text: STATS.xname
                 },
                 min: 0, // Force x-axis to start at 0
             },
             y: {
                 title: {
                     display: true,
-                    text: stats.yname
+                    text: STATS.yname
                 },
                 min: 0, // Force y-axis to start at 0
                 max: 100

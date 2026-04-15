@@ -11,6 +11,7 @@ Signup
 {% block main %}
 
 <form id = "signup-form" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label for="username">Username: </label>
     <input type="text" required name="username" value="{{ info.username }}"/>
     <div class="name-row">

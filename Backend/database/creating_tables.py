@@ -1,7 +1,12 @@
+import os
 import sqlite3
+from dotenv import load_dotenv
 
-def startdatabase():  
-    connect = sqlite3.connect("websitedatabase.db")
+load_dotenv()
+DB_PATH = os.getenv('DB_PATH', os.path.join(os.path.dirname(__file__), '..', '..', 'websitedatabase.db'))
+
+def start_database():
+    connect = sqlite3.connect(DB_PATH)
     cursor = connect.cursor() 
     return cursor, connect
 # this code runs once every time the website is 
@@ -9,11 +14,11 @@ def startdatabase():
 # instance of the database that can be used 
 # in the code
 
-def closedatabase(cursor):
+def close_database(cursor):
     cursor.close()
 
-def createalltables():
-    cursor, conn = startdatabase()
+def create_all_tables():
+    cursor, conn = start_database()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Users 
                    (id INTEGER PRIMARY KEY AUTOINCREMENT,
                    first_name TEXT NOT NULL,
@@ -50,7 +55,7 @@ def createalltables():
                    FOREIGN KEY (daily_tracker_id) REFERENCES Daily_Tracker(id) ON DELETE CASCADE
                    )''')
     conn.commit()
-    closedatabase(cursor)
+    close_database(cursor)
     # only needs to be run once for each table
 
-createalltables()
+create_all_tables()
