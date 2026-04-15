@@ -13,7 +13,7 @@ def calculate_data(name_x: str, name_y: str, points: List[Dict[str, float]]) -> 
     mean_y = np.mean(data_y)
     numerator = np.sum((data_x.flatten() - mean_x) * (data_y - mean_y))
     denominator = np.sqrt(np.sum((data_x.flatten() - mean_x) ** 2) * np.sum((data_y - mean_y) ** 2))
-    pmcc = numerator / denominator
+    pmcc = numerator / denominator if denominator != 0 else 0.0
     model = LinearRegression()
     model.fit(data_x, data_y)
     coef = model.coef_[0]

@@ -16,14 +16,14 @@ document.getElementById("wakeup-minute").value = formattedMinute;
 document.getElementById("wakeup-period").value = period;
 
 const bedTime = document.getElementById('bed-time').value;
-const bed_hour24 = Math.floor(bedTime);
-const bed_minute = Math.round((bedTime - bed_hour24) * 60);
-const bed_period = bed_hour24 >= 12 ? "PM" : "AM";
-const bed_hour12 = bed_hour24 % 12 || 12;
-const bed_formattedMinute = bed_minute.toString().padStart(2, "0");
-document.getElementById("bedtime-hour").value = bed_hour12;
-document.getElementById("bedtime-minute").value = bed_formattedMinute;
-document.getElementById("bedtime-period").value = bed_period;
+const bedHour24 = Math.floor(bedTime);
+const bedMinute = Math.round((bedTime - bedHour24) * 60);
+const bedPeriod = bedHour24 >= 12 ? "PM" : "AM";
+const bedHour12 = bedHour24 % 12 || 12;
+const bedFormattedMinute = bedMinute.toString().padStart(2, "0");
+document.getElementById("bedtime-hour").value = bedHour12;
+document.getElementById("bedtime-minute").value = bedFormattedMinute;
+document.getElementById("bedtime-period").value = bedPeriod;
 showSleepHours();
 
 function cancelEdit() {
@@ -33,7 +33,7 @@ function cancelEdit() {
     }
 }
 
-function get_wakeup_time(){
+function getWakeupTime(){
     let hour = parseInt(document.getElementById('wakeup-hour').value);
     const minute = parseInt(document.getElementById('wakeup-minute').value);
     const period = document.getElementById('wakeup-period').value;
@@ -42,7 +42,7 @@ function get_wakeup_time(){
     return hour + (minute / 60);
 }
 
-function get_bed_time(){
+function getBedTime(){
     let hour = parseInt(document.getElementById('bedtime-hour').value);
     const minute = parseInt(document.getElementById('bedtime-minute').value);
     const period = document.getElementById('bedtime-period').value;
@@ -53,16 +53,16 @@ function get_bed_time(){
 
 function saveDailyTracker(){
     showSleepHours();
-    const daily_trackerData = {
-        comment: document.getElementById('daily_tracker-comment').innerText,
+    const dailyTrackerData = {
+        comment: document.getElementById('daily-tracker-comment').innerText,
         mood_score: document.getElementById('mood-display').innerText,
-        wakeup_time: get_wakeup_time(),
-        bed_time: get_bed_time(),
+        wakeup_time: getWakeupTime(),
+        bed_time: getBedTime(),
         exercise_mins: document.getElementById('exercise-mins-input').value || 0,
         productive_mins: document.getElementById('productive-mins-input').value || 0,
         meditation_mins: document.getElementById('meditation-mins-input').value || 0
     };
-    if (daily_trackerData.comment == "Add a comment" || daily_trackerData.comment == ""){
+    if (dailyTrackerData.comment == "Add a comment" || dailyTrackerData.comment == ""){
         showSnackbar("Daily Tracker could not be saved: Comment is missing", orange);
     } else {
         fetch(window.location.href, {
@@ -71,7 +71,7 @@ function saveDailyTracker(){
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken
             },
-            body: JSON.stringify(daily_trackerData)
+            body: JSON.stringify(dailyTrackerData)
         })
         .then(response => {
             if (response.ok){
@@ -85,10 +85,10 @@ function saveDailyTracker(){
 }
 
 function deleteDailyTracker(){
-    var daily_trackerid = document.getElementById("daily_trackerId").value;
+    const dailyTrackerId = document.getElementById("daily-tracker-id").value;
     var userConfirmed = confirm("Are you sure you want to delete this daily tracker?");
     if (userConfirmed){
-        window.location.href = '/delete_daily_tracker/' + daily_trackerid;
+        window.location.href = '/delete_daily_tracker/' + dailyTrackerId;
     }
 }
 
@@ -96,14 +96,14 @@ function updateMoodDisplay(value) {
     document.getElementById("mood-display").textContent = value;
 }
 
-function calculateAsleepHours(){
-    let hours = get_wakeup_time() - get_bed_time();
+function calculateSleepHours(){
+    let hours = getWakeupTime() - getBedTime();
     if (hours < 0){ hours = hours + 24; }
     return hours;
 }
 
 function showSleepHours(){
-    document.getElementById('sleep-hours').innerText = 'You slept for ' + calculateAsleepHours() + ' hours';
+    document.getElementById('sleep-hours').innerText = 'You slept for ' + calculateSleepHours() + ' hours';
 }
 
 document.addEventListener("DOMContentLoaded", () => {

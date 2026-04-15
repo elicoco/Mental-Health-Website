@@ -30,7 +30,7 @@ Daily Tracker
     </div>
     <div class="bottomdiv">
         <h2>Comment</h2>
-        <p id="daily_tracker-comment" contenteditable="true">{{daily_tracker.comment}}</p>
+        <p id="daily-tracker-comment" contenteditable="true">{{daily_tracker.comment}}</p>
         <br>
         <div class="buttons">
             <button id="save-button" onclick="saveDailyTracker()" aria-label="Save Daily Tracker">Save</button>
@@ -38,7 +38,7 @@ Daily Tracker
             <button id="delete-button" onclick="deleteDailyTracker()" aria-label="Delete Daily Tracker">Delete</button>
         </div>
     </div>
-    <input type="hidden" id="daily_trackerId" value="{{ daily_tracker.id }}">
+    <input type="hidden" id="daily-tracker-id" value="{{ daily_tracker.id }}">
     <input type="hidden" id="wakeup-time" value="{{ daily_tracker.wakeup_time }}">
     <input type="hidden" id="bed-time" value="{{ daily_tracker.bed_time }}">
 </div>

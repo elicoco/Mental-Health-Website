@@ -11,7 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journal_id, get_journals_by_username, update_journal_by_id
-from Backend.database.login import check_login
+from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
 from Backend.meditations.search_meditations import get_all_meditations, get_meditation_by_id, search_meditation_on_key
@@ -33,7 +33,7 @@ blue = "#2196F3"
 orange = "#FBC02D"
 
 # function to check if user is in a session
-def check_if_session():
+def require_login():
     if 'username' in session: # if in a session
         return None
     else:
@@ -45,9 +45,9 @@ def check_if_session():
 @app.route("/")
 def main():
     # check if user is logged in
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         if request.args.get('snackbar_message','') != "":
             # checks if there is snackbar and sends snackbar accordingly
@@ -68,7 +68,7 @@ def login():
             # checks data is not empty
             information = InputLogin(username=username, password=password)
             # calls a function to check if the login information is correct
-            snackbar = check_login(information)
+            snackbar = authenticate_user(information)
             if snackbar.colour == green:
                 session.clear()
                 session['username'] = username
@@ -78,7 +78,7 @@ def login():
                 # send error message if login doesn't work
                 return render_template("login.html",loggedin=False, snackbar = snackbar, username = username)
     else:
-        if check_if_session() is not None:
+        if require_login() is not None:
             if request.args.get('snackbar_message', '') is not None:
                 # checks for snackbar message and displays snackbar accordingly
                 snackbar = (Snackbar(message=request.args.get('snackbar_message', ''),
@@ -135,9 +135,9 @@ def email_verification(key):
 
 @app.route("/journal")
 def journal():
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         journals = get_journals_by_username(username=session['username'])
         for current_journal in journals:
@@ -152,9 +152,9 @@ def journal():
 @app.route("/journal/<id>", methods=["GET","POST"])
 def journal_id(id):
     if request.method == "GET":
-        in_session = check_if_session()
-        if in_session is not None:
-            return in_session
+        login_redirect = require_login()
+        if login_redirect is not None:
+            return login_redirect
         else:
             if check_journal_access_by_username(username=session['username'],journal_id=id):
                 # checks if user is allowed to access this journal
@@ -182,9 +182,9 @@ def journal_id(id):
 @app.route('/new_journal')
 def new_journal():
     # check if logged in
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         # create a new journal for the user
         current_journal = create_new_journal_by_username(session['username'])
@@ -195,9 +195,9 @@ def new_journal():
 # deleting journal route
 @app.route('/delete_journal/<id>')
 def delete_journal(id):
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         if check_journal_access_by_username(username=session['username'],journal_id=id):
             # checks if it has access to delete this journal
@@ -214,9 +214,9 @@ def delete_journal(id):
 # main daily tracker page route
 @app.route("/daily_tracker")
 def daily_tracker():
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         daily_trackers = get_daily_trackers_by_username(username=session['username'])
         for current_daily_tracker in daily_trackers:
@@ -234,9 +234,9 @@ def daily_tracker():
 @app.route("/daily_tracker/<id>", methods=["GET","POST"])
 def daily_tracker_id(id):
     if request.method == "GET":
-        in_session = check_if_session()
-        if in_session is not None:
-            return in_session
+        login_redirect = require_login()
+        if login_redirect is not None:
+            return login_redirect
         else:
             if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
                 # checks if user is allowed to access this daily_tracker
@@ -271,9 +271,9 @@ def daily_tracker_id(id):
 
 @app.route('/new_daily_tracker')
 def new_daily_tracker():
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         current_daily_tracker = create_new_daily_tracker_by_username(session['username'])
         return redirect(url_for('daily_tracker_id', id=current_daily_tracker.id))
@@ -281,9 +281,9 @@ def new_daily_tracker():
 
 @app.route('/delete_daily_tracker/<id>')
 def delete_daily_tracker(id):
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         if check_daily_tracker_access_by_username(username=session['username'],daily_tracker_id=id):
             # checks if it has access to delete this daily_tracker
@@ -298,9 +298,9 @@ def delete_daily_tracker(id):
 # for all graphs
 @app.route('/graph/<group_type>')
 def display_scatter_graph(group_type):
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         if not check_data_exists(session['username']):
             # if there is no data then it will redirect to the daily tracker page so there is no error
@@ -327,9 +327,9 @@ def display_scatter_graph(group_type):
 
 @app.route('/calendar')
 def calendar(): 
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         data = get_daily_trackers_by_username(session['username'])
         # converts it to json for transfer to JS
@@ -340,9 +340,9 @@ def calendar():
 
 @app.route('/day/<date>')
 def display_day(date):
-    in_session = check_if_session()
-    if in_session is not None:
-        return in_session
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
     else:
         current_daily_tracker = get_daily_trackers_by_username_date(session['username'], date)
         if not current_daily_tracker:

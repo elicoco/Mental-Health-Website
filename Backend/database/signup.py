@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from Backend.custom.customclasses import Snackbar, SignupInformation
 from Backend.database.creating_tables import close_database, start_database
 from Backend.email.email import send_email
-from Backend.login_signup.hash import password_hash, key_hash
+from Backend.login_signup.hash import hash_password, hash_key
 from Backend.login_signup.signup import password_strong
 
 load_dotenv()
@@ -24,16 +24,23 @@ def create_new_user(info: SignupInformation):
             body = (f'''Thank you for signing up to Zen Log.
 To verify your email please click the link {BASE_URL}/emailverification/{email_verification_key}''')
             cursor.execute('''INSERT INTO Users(username,encrypted_password,email,first_name,last_name,hashed_email_verification_key)
-            VALUES (%s,%s,%s,%s,%s,%s)''', (info.username, password_hash(info.password),
-            info.email, info.first_name, info.last_name, key_hash(email_verification_key)))
+            VALUES (%s,%s,%s,%s,%s,%s)''', (info.username, hash_password(info.password),
+            info.email, info.first_name, info.last_name, hash_key(email_verification_key)))
             conn.commit()
-            try:
-                send_email(subject="Verify Email", body=body, to=info.email)
+            if os.getenv('LOCAL_DEV'):
+                # No email service configured — auto-verify for local development
+                cursor.execute('''UPDATE Users SET email_verified_bool = 1 WHERE username = %s''', (info.username,))
+                conn.commit()
                 snackbar = (Snackbar(need_snackbar=True, colour=green,
-                                     message="Signup Successful, Please Verify Email To Login"))
-            except Exception:
-                snackbar = (Snackbar(need_snackbar=True, colour=orange,
-                                     message="Account created but verification email failed to send, please contact support"))
+                                     message="Signup Successful (dev mode: email auto-verified)"))
+            else:
+                try:
+                    send_email(subject="Verify Email", body=body, to=info.email)
+                    snackbar = (Snackbar(need_snackbar=True, colour=green,
+                                         message="Signup Successful, Please Verify Email To Login"))
+                except Exception:
+                    snackbar = (Snackbar(need_snackbar=True, colour=orange,
+                                         message="Account created but verification email failed to send, please contact support"))
         else:
             snackbar = (Snackbar(need_snackbar=True, colour=orange,
                                  message="Password Not Strong Enough, Must Be at least 8 Characters Long and Contain a Symbol, Letter and Number"))
@@ -46,10 +53,10 @@ To verify your email please click the link {BASE_URL}/emailverification/{email_v
 def verify_user_by_email_verification_key(key: str):
     returned = False
     cursor, conn = start_database()
-    cursor.execute('''SELECT email FROM Users WHERE hashed_email_verification_key = %s''', (key_hash(key),))
+    cursor.execute('''SELECT email FROM Users WHERE hashed_email_verification_key = %s''', (hash_key(key),))
     email = cursor.fetchall()
     if len(email) == 1:
-        cursor.execute('''UPDATE Users SET email_verified_bool = 1 WHERE hashed_email_verification_key = %s''', (key_hash(key),))
+        cursor.execute('''UPDATE Users SET email_verified_bool = 1 WHERE hashed_email_verification_key = %s''', (hash_key(key),))
         conn.commit()
         returned = True
     close_database(cursor, conn)

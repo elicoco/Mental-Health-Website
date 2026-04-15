@@ -50,7 +50,7 @@ function saveJournal(){
 }
 
 function deleteJournal(){
-    var journalId = document.getElementById("journalId").value;
+    var journalId = document.getElementById("journal-id").value;
     var userConfirmed = confirm("Are you sure you want to delete this journal?");
     if (userConfirmed){
         window.location.href = '/delete_journal/' + journalId;

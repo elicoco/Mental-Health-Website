@@ -11,7 +11,7 @@ if (GROUP_NAME == 'sleep'){ // if it's for sleep then it needs update title
 else{
     HOUR_MOOD_SCORE_INCREASE = (STATS.slope * 60).toFixed(2);
 }
-const PMCC = (STATS.PMCC*100).toFixed(1);
+const PMCC = (STATS.pmcc*100).toFixed(1);
 if (PMCC > 0){ // if it is a positive correlation than it will show this in the sentences
     document.getElementById("correlation-sentence").textContent = `On average, every hour of ${GROUP_NAME} increased your mood score by
     ${HOUR_MOOD_SCORE_INCREASE}`; // sentences to communicate with user
