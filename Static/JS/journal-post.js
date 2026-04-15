@@ -4,7 +4,7 @@ blue = "#2196F3";
 orange ="#FFBF00";
 
 let prompts = [];
-fetch('/static/JSON/prompts.json')
+fetch(PROMPTS_URL)
     .then(response => response.json())
     .then(data => {
         prompts = data.prompts;
@@ -57,15 +57,11 @@ function deleteJournal(){
     }
 }
 
-function prompt(){
+function showPrompt(){
     if (prompts.length === 0){
         showSnackbar("Prompts are still loading, please try again", orange);
         return;
     }
-    showSnackbar(getRandomPrompt(), blue, 10);
-}
-
-function getRandomPrompt() {
     const randomIndex = Math.floor(Math.random() * prompts.length);
-    return prompts[randomIndex];
+    showSnackbar(prompts[randomIndex], blue, 10);
 }

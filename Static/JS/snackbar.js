@@ -1,5 +1,9 @@
 function showSnackbar(message, colour, time=10) {
+  var existing = document.querySelector(".snackbar");
+  if (existing) document.body.removeChild(existing);
+
   var snackbar = document.createElement("div");
+  snackbar.classList.add("snackbar");
   snackbar.textContent = message;
 
   // Apply styles
@@ -20,7 +24,7 @@ function showSnackbar(message, colour, time=10) {
   setTimeout(function () {
     snackbar.style.opacity = "0";
     setTimeout(function () {
-      document.body.removeChild(snackbar);
+      if (document.body.contains(snackbar)) document.body.removeChild(snackbar);
     }, 500);
   }, time*1000);
 }

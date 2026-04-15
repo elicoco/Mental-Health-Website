@@ -18,11 +18,14 @@ Journals
         <button id="save-button" onclick="saveJournal()" aria-label="Save Journal">Save</button>
         <button id="cancel-button" onclick="cancelEdit()" aria-label="Cancel Journal">Cancel</button>
         <button id="delete-button" onclick="deleteJournal()" aria-label="Delete Journal">Delete</button>
-        <button id="prompt-button" onclick="prompt()" aria-label="Prompt">Prompt</button>
+        <button id="prompt-button" onclick="showPrompt()" aria-label="Prompt">Prompt</button>
     </div>
     <p id="journal-date">{{journal.date_created}}</p>
 </div>
 
+<script>
+    const PROMPTS_URL = "{{ url_for('static', filename='JSON/prompts.json') }}";
+</script>
 <script src="{{ url_for('static', filename='JS/journal-post.js') }}"> </script>
 
 {% endblock %}
