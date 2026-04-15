@@ -57,6 +57,7 @@ platformdirs==4.9.6
 prompt_toolkit==3.0.52
 prosperity4btest==0.4.2
 protobuf==7.34.1
+psycopg2-binary==2.9.11
 pure_eval==0.2.3
 pycparser==3.0
 Pygments==2.20.0

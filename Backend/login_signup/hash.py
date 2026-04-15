@@ -1,3 +1,4 @@
+import hashlib
 import bcrypt
 
 def password_hash(password: str) -> str:
@@ -8,3 +9,8 @@ def password_hash(password: str) -> str:
 
 def password_verify(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+def key_hash(value: str) -> str:
+    # SHA256 for non-password tokens (e.g. email verification keys).
+    # Safe to use here because these are long random strings, not user-chosen passwords.
+    return hashlib.sha256(value.encode('utf-8')).hexdigest()
