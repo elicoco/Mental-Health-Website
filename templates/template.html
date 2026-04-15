@@ -1,8 +1,9 @@
 <head>
     <title>
-    {% block title %} 
+    {% block title %}
     {% endblock %}
     </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/basic.css') }}">
     {% block links %}
     {% endblock %}
