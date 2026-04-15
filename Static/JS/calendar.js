@@ -36,10 +36,16 @@ function generateCalendar(year, month){
         targetDiv.appendChild(blankDiv);
     }
 
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
     for (let i = 1; i <= daysInMonth; i++){
         const dayDiv = document.createElement("div");
         dayDiv.textContent = i;
         dayDiv.classList.add("day");
+
+        const thisDate = new Date(year, month, i);
+        const isFuture = thisDate > todayDate;
 
         if (trackerDays.includes(i)){
             dayDiv.addEventListener("click", function() {
@@ -57,6 +63,13 @@ function generateCalendar(year, month){
             } else {
                 dayDiv.style.backgroundColor = red;
             }
+        } else if (!isFuture) {
+            dayDiv.addEventListener("click", function() {
+                handleDayClick(i, month+1, year);
+            });
+            dayDiv.classList.add("empty-day");
+        } else {
+            dayDiv.classList.add("future-day");
         }
         targetDiv.appendChild(dayDiv);
     }

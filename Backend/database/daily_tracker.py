@@ -72,6 +72,19 @@ def create_new_daily_tracker_by_username(username: str):
     close_database(cursor, conn)
     return daily_tracker
 
+def create_daily_tracker_for_date(username: str, date: str):
+    cursor, conn = start_database()
+    cursor.execute('''SELECT id FROM Users WHERE username = %s''', (username,))
+    userid = cursor.fetchone()[0]
+    cursor.execute('''INSERT INTO Daily_Tracker(user_id, date_of_data, in_use)
+                      VALUES(%s, %s, 1)
+                      ON CONFLICT ON CONSTRAINT unique_user_date DO UPDATE SET in_use = 1
+                      RETURNING id''', (userid, date))
+    daily_tracker_id = cursor.fetchone()[0]
+    conn.commit()
+    close_database(cursor, conn)
+    return DailyTracker(id=daily_tracker_id, date=date)
+
 def delete_daily_tracker_by_id(id):
     cursor, conn = start_database()
     cursor.execute('''UPDATE Daily_Tracker SET in_use = 0 WHERE id = %s''', (id,))

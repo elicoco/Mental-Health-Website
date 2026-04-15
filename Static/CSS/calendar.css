@@ -70,11 +70,20 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tracker-day:hover {
+.tracker-day:hover, .empty-day:hover {
     cursor: pointer;
     background: #007bff;
     color: white;
     transform: scale(1.05);
+}
+
+.empty-day {
+    opacity: 0.4;
+}
+
+.future-day {
+    opacity: 0.2;
+    cursor: default;
 }
 
 /* Empty Days */

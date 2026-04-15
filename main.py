@@ -9,7 +9,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
-from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
+from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_daily_tracker_for_date, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journal_id, get_journals_by_username, update_journal_by_id
 from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
@@ -326,7 +326,7 @@ def display_scatter_graph(group_type):
         return render_template("scatter-graph-display.html", stats=stats_json, name = group_type)
 
 @app.route('/calendar')
-def calendar(): 
+def calendar():
     login_redirect = require_login()
     if login_redirect is not None:
         return login_redirect
@@ -335,7 +335,10 @@ def calendar():
         # converts it to json for transfer to JS
         trackers_dict_list = [tracker.to_dict() for tracker in data]
         daily_trackers_json = json.dumps(trackers_dict_list, indent=4)
-        return render_template("calendar.html", dailytrackers = daily_trackers_json)
+        snackbar_message = request.args.get('snackbar_message', '')
+        snackbar_colour = request.args.get('snackbar_colour', orange)
+        snackbar = Snackbar(need_snackbar=bool(snackbar_message), colour=snackbar_colour, message=snackbar_message)
+        return render_template("calendar.html", dailytrackers=daily_trackers_json, snackbar=snackbar)
 
 
 @app.route('/day/<date>')
@@ -343,14 +346,13 @@ def display_day(date):
     login_redirect = require_login()
     if login_redirect is not None:
         return login_redirect
-    else:
-        current_daily_tracker = get_daily_trackers_by_username_date(session['username'], date)
-        if not current_daily_tracker:
-            snackbar = (Snackbar(message='No daily tracker available for this day',
-            need_snackbar = True,colour = red))
-            return render_template("calendar.html", snackbar=snackbar)
-        else:
-            return redirect(url_for('daily_tracker_id', id=current_daily_tracker.id))
+    if date > datetime.now().strftime("%Y-%m-%d"):
+        snackbar = Snackbar(message="You can't log a future date", need_snackbar=True, colour=orange)
+        return redirect(url_for('calendar', snackbar_message=snackbar.message, snackbar_colour=snackbar.colour))
+    current_daily_tracker = get_daily_trackers_by_username_date(session['username'], date)
+    if not current_daily_tracker:
+        current_daily_tracker = create_daily_tracker_for_date(session['username'], date)
+    return redirect(url_for('daily_tracker_id', id=current_daily_tracker.id))
 
 # code for a single meditation page
 @app.route("/meditation/<id>")
