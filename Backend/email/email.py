@@ -1,31 +1,18 @@
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
 from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
-# Replace with your Gmail email address
 load_dotenv()
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL = os.getenv('EMAIL')
-APP_PASSWORD = os.getenv('APPPASSWORD') # Use the 16-character App Password
 
 def send_email(subject, body, to):
-    # Set up the server using SSL on port 465
-    server = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=10)
-
-    # Login with your email and the App Password
-    server.login(EMAIL, APP_PASSWORD)
-
-    # Create the email
-    msg = MIMEMultipart()
-    msg['From'] = EMAIL
-    msg['To'] = to
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-
-    # Send the email
-    server.sendmail(EMAIL, to, msg.as_string())
-
-    # Close the server
-    server.quit()
+    message = Mail(
+        from_email=EMAIL,
+        to_emails=to,
+        subject=subject,
+        plain_text_content=body
+    )
+    client = SendGridAPIClient(SENDGRID_API_KEY)
+    client.send(message)
