@@ -1,10 +1,20 @@
 {% extends "template.html" %}
 
-{% block title %}
-Home
+{% block title %}Home{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
 {% endblock %}
 
 {% block main %}
+
+<div class="home-greeting">
+    <h1>{{ greeting }}, {{ username }}</h1>
+    <p class="home-date">{{ today | replace('-', '/') }}</p>
+    {% if best_streak > 0 %}
+    <p class="home-streak">🔥 {{ best_streak }}-day streak</p>
+    {% endif %}
+</div>
 
 {% if not tracked_today %}
 <div id="track-today-banner">
@@ -12,5 +22,92 @@ Home
     <a href="{{ url_for('display_day', date=today) }}">Track Now</a>
 </div>
 {% endif %}
+
+<div class="home-grid">
+
+    <!-- This week -->
+    <div class="home-card wide">
+        <h2>This Week</h2>
+        <div class="week-row">
+            {% for day in last_7_days %}
+            <div class="week-day">
+                <span class="week-label {% if day.is_today %}today{% endif %}">{{ day.day }}</span>
+                {% if day.mood is not none %}
+                    {% if day.tracker_id %}
+                    <a href="{{ url_for('daily_tracker_id', id=day.tracker_id) }}" class="week-dot
+                        {% if day.mood >= 67 %}mood-high
+                        {% elif day.mood >= 34 %}mood-mid
+                        {% else %}mood-low{% endif %}"
+                        title="{{ day.mood }}">
+                    </a>
+                    {% endif %}
+                {% else %}
+                    {% if day.is_today %}
+                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty today-dot" title="Track today"></a>
+                    {% else %}
+                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty" title="Track this day"></a>
+                    {% endif %}
+                {% endif %}
+                {% if day.mood is not none %}
+                <span class="week-score">{{ day.mood }}</span>
+                {% else %}
+                <span class="week-score">&nbsp;</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Habit streaks -->
+    <div class="home-card">
+        <div class="card-header">
+            <h2>Habit Streaks</h2>
+            <a href="{{ url_for('habits_page') }}" class="card-link">Manage</a>
+        </div>
+        {% if active_habits %}
+        <ul class="streak-list">
+            {% for habit in active_habits %}
+            <li class="streak-item">
+                <span class="streak-name">{{ habit.name }}</span>
+                <span class="streak-badge {% if habit.current_streak >= 7 %}streak-hot{% elif habit.current_streak > 0 %}streak-active{% endif %}">
+                    {% if habit.current_streak > 0 %}🔥{% endif %}
+                    {{ habit.current_streak }}d
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty-msg">No active habits. <a href="{{ url_for('habits_page') }}">Add one</a></p>
+        {% endif %}
+    </div>
+
+    <!-- Stats -->
+    <div class="home-card">
+        <h2>All Time</h2>
+        <div class="stats-grid">
+            <div class="stat-block">
+                <span class="stat-number">{{ total_tracked }}</span>
+                <span class="stat-label">Days Tracked</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">{{ total_habit_checkins }}</span>
+                <span class="stat-label">Habit Check-ins</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">{{ avg_sleep }}h</span>
+                <span class="stat-label">Avg Sleep</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">{{ total_meditation }}</span>
+                <span class="stat-label">Meditation</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">{{ total_exercise }}</span>
+                <span class="stat-label">Exercise</span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}

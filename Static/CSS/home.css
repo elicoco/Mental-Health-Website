@@ -1,0 +1,221 @@
+/* ── Greeting ── */
+.home-greeting {
+    margin-bottom: 20px;
+}
+
+.home-greeting h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.home-date {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 2px;
+}
+
+.home-streak {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #E65100;
+    margin-top: 6px;
+}
+
+/* ── Grid layout ── */
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.home-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.home-card h2 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #999;
+    margin-bottom: 16px;
+}
+
+.wide {
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.card-header h2 {
+    margin-bottom: 0;
+}
+
+.card-link {
+    font-size: 0.8rem;
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Week row ── */
+.week-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.week-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.week-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.week-label.today {
+    color: #4CAF50;
+}
+
+.week-dot {
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+.week-dot:hover {
+    transform: scale(1.12);
+    opacity: 0.85;
+}
+
+.mood-high  { background-color: #4CAF50; }
+.mood-mid   { background-color: #F9A825; }
+.mood-low   { background-color: #E53935; }
+.mood-empty { background-color: #ececec; }
+
+.today-dot {
+    border: 2px dashed #aaa;
+    background-color: #f5f5f5;
+}
+
+.week-score {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #666;
+}
+
+/* ── Streak list ── */
+.streak-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.streak-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.streak-item:last-child {
+    border-bottom: none;
+}
+
+.streak-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.streak-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #888;
+    background: #f5f5f5;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.streak-active {
+    color: #E65100;
+    background: #FFF3E0;
+}
+
+.streak-hot {
+    color: #BF360C;
+    background: #FBE9E7;
+}
+
+.empty-msg {
+    font-size: 0.9rem;
+    color: #aaa;
+    font-style: italic;
+}
+
+.empty-msg a {
+    color: #4CAF50;
+}
+
+/* ── Stats ── */
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 28px;
+}
+
+.stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .home-grid { grid-template-columns: 1fr; }
+    .wide { grid-column: 1; }
+    .week-dot { width: 28px; height: 28px; }
+}

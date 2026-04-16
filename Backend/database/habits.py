@@ -95,6 +95,7 @@ def _calculate_streaks(cursor, habit_id: int, periods: list, today: datetime.dat
             longest = max(longest, current)
         else:
             current = 1
+    longest = max(longest, current)  # capture final consecutive segment
     longest = max(longest, current_streak)
 
     return current_streak, longest
@@ -203,3 +204,17 @@ def toggle_habit_log(habit_id: int, date: str, username: str) -> bool:
     conn.commit()
     close_database(cursor, conn)
     return completed
+
+
+def get_total_habit_checkins(username: str) -> int:
+    cursor, conn = start_database()
+    cursor.execute('''
+        SELECT COUNT(Habit_Logs.id)
+        FROM Habit_Logs
+        INNER JOIN Habits ON Habits.id = Habit_Logs.habit_id
+        INNER JOIN Users ON Users.id = Habits.user_id
+        WHERE Users.username = %s
+    ''', (username,))
+    result = cursor.fetchone()
+    close_database(cursor, conn)
+    return result[0] if result else 0

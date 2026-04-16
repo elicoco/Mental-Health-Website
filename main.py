@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
 from dotenv import load_dotenv
@@ -11,7 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_daily_tracker_for_date, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journal_id, get_journals_by_username, update_journal_by_id
-from Backend.database.habits import add_habit, delete_habit_permanently, end_habit, get_all_habits_for_user, get_habits_with_completion, resume_habit, toggle_habit_log
+from Backend.database.habits import add_habit, delete_habit_permanently, end_habit, get_all_habits_for_user, get_habits_with_completion, get_total_habit_checkins, resume_habit, toggle_habit_log
 from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
@@ -55,9 +55,69 @@ def main():
             snackbar = Snackbar(message=request.args.get('snackbar_message', ''),need_snackbar=True,colour=green)
         else:
             snackbar = (Snackbar(need_snackbar=False, colour="", message=""))
-        today = datetime.now().strftime("%Y-%m-%d")
+        today_dt = datetime.now()
+        today = today_dt.strftime("%Y-%m-%d")
+        hour = today_dt.hour
+        greeting = "Good morning" if hour < 12 else "Good afternoon" if hour < 18 else "Good evening"
+
+        all_trackers = get_daily_trackers_by_username(session['username'])
         tracked_today = bool(get_daily_trackers_by_username_date(session['username'], today))
-        return render_template("home.html", snackbar=snackbar, username=session['username'], tracked_today=tracked_today, today=today)
+        trackers_by_date = {t.date: t for t in all_trackers}
+
+        last_7_days = []
+        for i in range(6, -1, -1):
+            d = today_dt.date() - timedelta(days=i)
+            d_str = d.strftime("%Y-%m-%d")
+            tracker = trackers_by_date.get(d_str)
+            last_7_days.append({
+                'date': d_str,
+                'day': d.strftime('%a'),
+                'mood': tracker.mood_score if tracker else None,
+                'tracker_id': tracker.id if tracker else None,
+                'is_today': i == 0
+            })
+
+        all_habits = get_all_habits_for_user(session['username'])
+        active_habits = [h for h in all_habits if h['is_active']]
+        total_tracked = len(all_trackers)
+        total_habit_checkins = get_total_habit_checkins(session['username'])
+
+        # Aggregate stats from tracker entries
+        total_meditation_mins = sum(t.meditation_mins or 0 for t in all_trackers)
+        total_exercise_mins = sum(t.exercise_mins or 0 for t in all_trackers)
+        sleep_hours_list = [
+            (24 - t.bed_time + t.wakeup_time) if t.bed_time > t.wakeup_time else (t.wakeup_time - t.bed_time)
+            for t in all_trackers if t.bed_time is not None and t.wakeup_time is not None
+        ]
+        avg_sleep = round(sum(sleep_hours_list) / len(sleep_hours_list), 1) if sleep_hours_list else 0
+
+        def fmt_mins(m):
+            if m >= 60:
+                h, rem = divmod(m, 60)
+                return f"{h}h {rem}m" if rem else f"{h}h"
+            return f"{m}m"
+
+        total_meditation = fmt_mins(total_meditation_mins)
+        total_exercise = fmt_mins(total_exercise_mins)
+
+        # Consecutive days-tracked streak (today not tracked yet doesn't break it)
+        tracked_dates = {t.date for t in all_trackers}
+        current_streak = 0
+        check = today_dt.date()
+        if today not in tracked_dates:
+            check -= timedelta(days=1)
+        while check.strftime("%Y-%m-%d") in tracked_dates:
+            current_streak += 1
+            check -= timedelta(days=1)
+        best_streak = current_streak
+
+        return render_template("home.html", snackbar=snackbar, username=session['username'],
+                               tracked_today=tracked_today, today=today, greeting=greeting,
+                               last_7_days=last_7_days, active_habits=active_habits,
+                               total_tracked=total_tracked, best_streak=best_streak,
+                               total_habit_checkins=total_habit_checkins,
+                               avg_sleep=avg_sleep, total_meditation=total_meditation,
+                               total_exercise=total_exercise)
 
 # login page
 @app.route("/login",methods=["GET","POST"])
