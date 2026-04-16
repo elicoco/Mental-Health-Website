@@ -46,6 +46,11 @@
                         <h1 class="header_title">Meditations</h1>
                     </div>
                 </a>
+                <a href="{{ url_for('insights') }}" class="header_link">
+                    <div class="headerdiv">
+                        <h1 class="header_title">Insights</h1>
+                    </div>
+                </a>
                 <!-- Checks if user is logged in and displays corresponding options -->
                 {% if loggedin == False %}
                     <a href="{{ url_for('login') }}" class="header_link">
@@ -84,6 +89,7 @@
                 <a href="{{ url_for('journal') }}" class="footer_link">Journals</a>
                 <a href="{{ url_for('daily_tracker') }}" class="footer_link">Daily Tracker</a>
                 <a href="{{ url_for('all_meditations') }}" class="footer_link">Meditations</a>
+                <a href="{{ url_for('insights') }}" class="footer_link">Insights</a>
                 <a href="{{ url_for('logout') }}" class="footer_link footer_logout">Logout</a>
             </div>
         </footer>

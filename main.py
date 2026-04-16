@@ -11,7 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from Backend.daily_tracker.dailytrackercalculator import calculate_mood_exercise_on_username, calculate_mood_meditation_on_username, calculate_mood_productive_on_username, calculate_mood_sleep_on_username, check_data_exists
 from Backend.database.daily_tracker import check_daily_tracker_access_by_username, create_daily_tracker_for_date, create_new_daily_tracker_by_username, delete_daily_tracker_by_id, get_daily_tracker_by_id, get_daily_trackers_by_username, get_daily_trackers_by_username_date, update_daily_tracker_by_id
 from Backend.database.journal import check_journal_access_by_username, create_new_journal_by_username, delete_journal_by_id, get_journal_by_journal_id, get_journals_by_username, update_journal_by_id
-from Backend.database.habits import add_habit, delete_habit_permanently, end_habit, get_all_habits_for_user, get_habits_with_completion, get_total_habit_checkins, resume_habit, toggle_habit_log
+from Backend.database.habits import add_habit, delete_habit_permanently, end_habit, get_all_habit_checkin_dates, get_all_habits_for_user, get_habit_completion_rates, get_habits_with_completion, get_total_habit_checkins, resume_habit, toggle_habit_log
 from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
@@ -79,26 +79,6 @@ def main():
 
         all_habits = get_all_habits_for_user(session['username'])
         active_habits = [h for h in all_habits if h['is_active']]
-        total_tracked = len(all_trackers)
-        total_habit_checkins = get_total_habit_checkins(session['username'])
-
-        # Aggregate stats from tracker entries
-        total_meditation_mins = sum(t.meditation_mins or 0 for t in all_trackers)
-        total_exercise_mins = sum(t.exercise_mins or 0 for t in all_trackers)
-        sleep_hours_list = [
-            (24 - t.bed_time + t.wakeup_time) if t.bed_time > t.wakeup_time else (t.wakeup_time - t.bed_time)
-            for t in all_trackers if t.bed_time is not None and t.wakeup_time is not None
-        ]
-        avg_sleep = round(sum(sleep_hours_list) / len(sleep_hours_list), 1) if sleep_hours_list else 0
-
-        def fmt_mins(m):
-            if m >= 60:
-                h, rem = divmod(m, 60)
-                return f"{h}h {rem}m" if rem else f"{h}h"
-            return f"{m}m"
-
-        total_meditation = fmt_mins(total_meditation_mins)
-        total_exercise = fmt_mins(total_exercise_mins)
 
         # Consecutive days-tracked streak (today not tracked yet doesn't break it)
         tracked_dates = {t.date for t in all_trackers}
@@ -111,13 +91,58 @@ def main():
             check -= timedelta(days=1)
         best_streak = current_streak
 
+        # Period start dates
+        from calendar import monthrange
+        def _prev_month(d):
+            m, y = d.month - 1, d.year
+            if m == 0:
+                m, y = 12, y - 1
+            return d.replace(year=y, month=m, day=min(d.day, monthrange(y, m)[1]))
+        def _prev_year(d):
+            try:
+                return d.replace(year=d.year - 1)
+            except ValueError:
+                return d.replace(year=d.year - 1, day=28)
+
+        today_date = today_dt.date()
+        period_starts = {
+            'week':  today_date - timedelta(days=6),
+            'month': _prev_month(today_date),
+            'year':  _prev_year(today_date),
+            'all':   None,
+        }
+
+        habit_log_dates = get_all_habit_checkin_dates(session['username'])
+
+        def fmt_mins(m):
+            if m >= 60:
+                h, rem = divmod(m, 60)
+                return f"{h}h {rem}m" if rem else f"{h}h"
+            return f"{m}m"
+
+        def period_stats(start):
+            ts = [t for t in all_trackers if start is None or datetime.strptime(t.date, '%Y-%m-%d').date() >= start]
+            sleep_list = [
+                (24 - t.bed_time + t.wakeup_time) if t.bed_time > t.wakeup_time else (t.wakeup_time - t.bed_time)
+                for t in ts if t.bed_time is not None and t.wakeup_time is not None
+            ]
+            checkins = sum(1 for d in habit_log_dates if start is None or d >= start)
+            return {
+                'days_tracked':    len(ts),
+                'habit_checkins':  checkins,
+                'avg_sleep':       str(round(sum(sleep_list) / len(sleep_list), 1)) + 'h' if sleep_list else '—',
+                'total_meditation': fmt_mins(sum(t.meditation_mins or 0 for t in ts)),
+                'total_exercise':   fmt_mins(sum(t.exercise_mins or 0 for t in ts)),
+            }
+
+        period_data = {k: period_stats(v) for k, v in period_starts.items()}
+
         return render_template("home.html", snackbar=snackbar, username=session['username'],
                                tracked_today=tracked_today, today=today, greeting=greeting,
                                last_7_days=last_7_days, active_habits=active_habits,
-                               total_tracked=total_tracked, best_streak=best_streak,
-                               total_habit_checkins=total_habit_checkins,
-                               avg_sleep=avg_sleep, total_meditation=total_meditation,
-                               total_exercise=total_exercise)
+                               best_streak=best_streak,
+                               period_data=json.dumps(period_data),
+                               initial_stats=period_data['all'])
 
 # login page
 @app.route("/login",methods=["GET","POST"])
@@ -451,6 +476,66 @@ def display_scatter_graph(group_type):
         stats_json = json.dumps(data.to_dict())
         group_type = group_type.capitalize()
         return render_template("scatter-graph-display.html", stats=stats_json, name = group_type)
+
+@app.route('/insights')
+def insights():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+
+    from collections import defaultdict
+
+    all_trackers = get_daily_trackers_by_username(session['username'])
+    sorted_trackers = sorted(
+        [t for t in all_trackers if t.mood_score is not None],
+        key=lambda x: x.date
+    )
+
+    # Raw mood points + 7-day rolling average
+    mood_points = [{'x': t.date, 'y': t.mood_score} for t in sorted_trackers]
+    rolling_avg = []
+    for i, t in enumerate(sorted_trackers):
+        window = sorted_trackers[max(0, i - 6):i + 1]
+        avg = sum(w.mood_score for w in window) / len(window)
+        rolling_avg.append({'x': t.date, 'y': round(avg, 1)})
+
+    # Average mood by day of week
+    dow_moods = defaultdict(list)
+    for t in sorted_trackers:
+        dow = datetime.strptime(t.date, '%Y-%m-%d').strftime('%a')
+        dow_moods[dow].append(t.mood_score)
+    days_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    dow_data = [round(sum(dow_moods[d]) / len(dow_moods[d]), 1) if dow_moods[d] else None for d in days_order]
+
+    # Best/worst day text
+    valid_dow = [(d, v) for d, v in zip(days_order, dow_data) if v is not None]
+    peak_day = max(valid_dow, key=lambda x: x[1])[0] if valid_dow else None
+    low_day = min(valid_dow, key=lambda x: x[1])[0] if valid_dow else None
+
+    # Best/worst week (min 3 entries)
+    week_moods = defaultdict(list)
+    for t in sorted_trackers:
+        d = datetime.strptime(t.date, '%Y-%m-%d').date()
+        week_moods[d.strftime('%Y-W%W')].append(t.mood_score)
+    week_avgs = {w: sum(v) / len(v) for w, v in week_moods.items() if len(v) >= 3}
+    best_week_avg = round(max(week_avgs.values()), 1) if week_avgs else None
+    worst_week_avg = round(min(week_avgs.values()), 1) if week_avgs else None
+
+    habit_stats = get_habit_completion_rates(session['username'])
+
+    return render_template('insights.html',
+        mood_points=json.dumps(mood_points),
+        rolling_avg=json.dumps(rolling_avg),
+        dow_labels=json.dumps(days_order),
+        dow_data=json.dumps(dow_data),
+        habit_stats=json.dumps(habit_stats),
+        best_week_avg=best_week_avg,
+        worst_week_avg=worst_week_avg,
+        peak_day=peak_day,
+        low_day=low_day,
+        total_entries=len(sorted_trackers)
+    )
+
 
 @app.route('/calendar')
 def calendar():

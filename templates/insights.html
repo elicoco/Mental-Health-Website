@@ -1,0 +1,87 @@
+{% extends "template.html" %}
+
+{% block title %}Insights{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/insights.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<input type="hidden" id="mood-points"  value="{{ mood_points }}">
+<input type="hidden" id="rolling-avg"  value="{{ rolling_avg }}">
+<input type="hidden" id="dow-labels"   value="{{ dow_labels }}">
+<input type="hidden" id="dow-data"     value="{{ dow_data }}">
+<input type="hidden" id="habit-stats"  value="{{ habit_stats }}">
+
+<div class="insights-header">
+    <h1>Insights</h1>
+    <span class="insights-subtitle">Based on {{ total_entries }} tracked day{{ 's' if total_entries != 1 }}</span>
+</div>
+
+{% if total_entries < 5 %}
+<div class="insights-empty">
+    <p>Track a few more days to unlock your insights.</p>
+</div>
+{% else %}
+
+<!-- Mood Trend -->
+<div class="insights-card insights-wide">
+    <h2>Mood Over Time</h2>
+    <div class="chart-wrap">
+        <canvas id="moodTrendChart"></canvas>
+    </div>
+    <p class="chart-note">Green line is your 7-day rolling average.</p>
+</div>
+
+<!-- Two column -->
+<div class="insights-grid">
+    <div class="insights-card">
+        <h2>Mood by Day of Week</h2>
+        <div class="chart-wrap chart-wrap-sm">
+            <canvas id="dowChart"></canvas>
+        </div>
+        {% if peak_day and low_day %}
+        <p class="chart-note">You tend to feel best on <strong>{{ peak_day }}s</strong> and lowest on <strong>{{ low_day }}s</strong>.</p>
+        {% endif %}
+    </div>
+
+    <div class="insights-card">
+        <h2>Habit Completion</h2>
+        <div class="chart-wrap chart-wrap-sm">
+            <canvas id="habitChart"></canvas>
+        </div>
+        <p class="chart-note">% of active days each habit was completed.</p>
+    </div>
+</div>
+
+<!-- Key stats -->
+<div class="insights-grid insights-stats">
+    <div class="insights-card insights-stat-card">
+        <span class="stat-label">Total Days Tracked</span>
+        <span class="stat-number">{{ total_entries }}</span>
+    </div>
+    <div class="insights-card insights-stat-card">
+        <span class="stat-label">Best Week Avg</span>
+        <span class="stat-number {% if best_week_avg and best_week_avg >= 67 %}colour-high{% elif best_week_avg and best_week_avg >= 34 %}colour-mid{% else %}colour-low{% endif %}">
+            {{ best_week_avg if best_week_avg is not none else '—' }}
+        </span>
+    </div>
+    <div class="insights-card insights-stat-card">
+        <span class="stat-label">Worst Week Avg</span>
+        <span class="stat-number {% if worst_week_avg and worst_week_avg >= 67 %}colour-high{% elif worst_week_avg and worst_week_avg >= 34 %}colour-mid{% else %}colour-low{% endif %}">
+            {{ worst_week_avg if worst_week_avg is not none else '—' }}
+        </span>
+    </div>
+    <div class="insights-card insights-stat-card">
+        <span class="stat-label">Correlations</span>
+        <a href="{{ url_for('display_scatter_graph', group_type='sleep') }}" class="stat-link">View &rarr;</a>
+    </div>
+</div>
+
+{% endif %}
+
+<script src="{{ url_for('static', filename='JS/insights.js') }}"></script>
+{% endblock %}

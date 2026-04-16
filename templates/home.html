@@ -82,32 +82,76 @@
     </div>
 
     <!-- Stats -->
+    <input type="hidden" id="period-data" value="{{ period_data }}">
     <div class="home-card">
-        <h2>All Time</h2>
+        <div class="card-header">
+            <h2 id="stats-period-label">All Time</h2>
+            <div class="stats-tabs">
+                <button class="stats-tab" data-period="week">Week</button>
+                <button class="stats-tab" data-period="month">Month</button>
+                <button class="stats-tab" data-period="year">Year</button>
+                <button class="stats-tab active" data-period="all">All</button>
+            </div>
+        </div>
         <div class="stats-grid">
             <div class="stat-block">
-                <span class="stat-number">{{ total_tracked }}</span>
+                <span class="stat-number" id="stat-days">{{ initial_stats.days_tracked }}</span>
                 <span class="stat-label">Days Tracked</span>
             </div>
             <div class="stat-block">
-                <span class="stat-number">{{ total_habit_checkins }}</span>
+                <span class="stat-number" id="stat-checkins">{{ initial_stats.habit_checkins }}</span>
                 <span class="stat-label">Habit Check-ins</span>
             </div>
             <div class="stat-block">
-                <span class="stat-number">{{ avg_sleep }}h</span>
+                <span class="stat-number" id="stat-sleep">{{ initial_stats.avg_sleep }}</span>
                 <span class="stat-label">Avg Sleep</span>
             </div>
             <div class="stat-block">
-                <span class="stat-number">{{ total_meditation }}</span>
+                <span class="stat-number" id="stat-meditation">{{ initial_stats.total_meditation }}</span>
                 <span class="stat-label">Meditation</span>
             </div>
             <div class="stat-block">
-                <span class="stat-number">{{ total_exercise }}</span>
+                <span class="stat-number" id="stat-exercise">{{ initial_stats.total_exercise }}</span>
                 <span class="stat-label">Exercise</span>
             </div>
         </div>
     </div>
 
 </div>
+
+<script>
+const PERIOD_DATA = JSON.parse(document.getElementById('period-data').value);
+const LABELS = { week: 'Last 7 Days', month: 'Last Month', year: 'Last Year', all: 'All Time' };
+
+const nums = {
+    days:       document.getElementById('stat-days'),
+    checkins:   document.getElementById('stat-checkins'),
+    sleep:      document.getElementById('stat-sleep'),
+    meditation: document.getElementById('stat-meditation'),
+    exercise:   document.getElementById('stat-exercise'),
+};
+
+function applyStats(period) {
+    const s = PERIOD_DATA[period];
+    const els = Object.values(nums);
+    els.forEach(el => el.classList.add('fade-out'));
+    setTimeout(() => {
+        document.getElementById('stats-period-label').textContent = LABELS[period];
+        nums.days.textContent       = s.days_tracked;
+        nums.checkins.textContent   = s.habit_checkins;
+        nums.sleep.textContent      = s.avg_sleep;
+        nums.meditation.textContent = s.total_meditation;
+        nums.exercise.textContent   = s.total_exercise;
+        els.forEach(el => el.classList.remove('fade-out'));
+    }, 200);
+    document.querySelectorAll('.stats-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.period === period);
+    });
+}
+
+document.querySelectorAll('.stats-tab').forEach(tab => {
+    tab.addEventListener('click', () => applyStats(tab.dataset.period));
+});
+</script>
 
 {% endblock %}

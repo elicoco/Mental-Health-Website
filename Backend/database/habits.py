@@ -218,3 +218,55 @@ def get_total_habit_checkins(username: str) -> int:
     result = cursor.fetchone()
     close_database(cursor, conn)
     return result[0] if result else 0
+
+
+def get_all_habit_checkin_dates(username: str) -> list:
+    """Return all habit log dates for a user."""
+    cursor, conn = start_database()
+    cursor.execute('''
+        SELECT hl.log_date
+        FROM Habit_Logs hl
+        JOIN Habits h ON h.id = hl.habit_id
+        JOIN Users u ON u.id = h.user_id
+        WHERE u.username = %s
+    ''', (username,))
+    dates = [row[0] for row in cursor.fetchall()]
+    close_database(cursor, conn)
+    return dates
+
+
+def get_habit_completion_rates(username: str) -> list:
+    """Return completion rate (%) for each habit based on active period days."""
+    cursor, conn = start_database()
+    today = datetime.date.today()
+    cursor.execute('''
+        SELECT h.id, h.name, hp.start_date, hp.end_date,
+               COUNT(DISTINCT hl.log_date) AS log_count
+        FROM Habits h
+        JOIN Users u ON u.id = h.user_id
+        JOIN Habit_Periods hp ON hp.habit_id = h.id
+        LEFT JOIN Habit_Logs hl ON hl.habit_id = h.id
+            AND hl.log_date >= hp.start_date
+            AND (hp.end_date IS NULL OR hl.log_date <= hp.end_date)
+        WHERE u.username = %s
+        GROUP BY h.id, h.name, hp.start_date, hp.end_date
+        ORDER BY h.name, hp.start_date
+    ''', (username,))
+    rows = cursor.fetchall()
+    close_database(cursor, conn)
+
+    from collections import defaultdict
+    habits = defaultdict(lambda: {'name': '', 'active_days': 0, 'logged_days': 0})
+    for habit_id, name, start, end, log_count in rows:
+        end_date = end if end else today
+        active_days = (end_date - start).days + 1
+        habits[habit_id]['name'] = name
+        habits[habit_id]['active_days'] += max(active_days, 0)
+        habits[habit_id]['logged_days'] += log_count
+
+    result = []
+    for data in habits.values():
+        rate = round(data['logged_days'] / data['active_days'] * 100) if data['active_days'] > 0 else 0
+        result.append({'name': data['name'], 'rate': min(rate, 100)})
+
+    return sorted(result, key=lambda x: x['rate'], reverse=True)
