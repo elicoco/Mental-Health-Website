@@ -1,132 +1,149 @@
-/* Editable fields */
-#daily_tracker-title, #daily_tracker-content {
-    border: 1px dashed #ccc;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    background-color: #fff;
-}
-#daily_tracker-title:focus, #daily_tracker-content:focus {
-    border-color: #fbc02d;
-    background-color: #fff8e1;
-    outline: none;
-}
-/* Button styles */
-.buttons button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* ── Three-column flex layout ── */
+.tracker-columns {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
 }
 
-#save-button {
-    background-color: #45a049;
+.tracker-col {
+    flex: 1;
+    min-width: 0;
 }
 
-#cancel-button {
-    background-color: #f44336;
+/* ── Section headings ── */
+.tracker-col h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
 }
 
-#delete-button {
-    background-color: #d32f2f;
-}
-
-.buttons button:hover {
-    opacity: 0.9;
-}
-
-/* Daily Tracker date */
-#daily_tracker-date {
-    font-size: 14px;
-    color: #666;
-    margin-top: 20px;
-    text-align: right;
-}
-.div50width{
-    float: left;
-    width: calc(33.33% - 20px);
-    padding: 10px;
-}
-.div50height{
-    height: calc(50% - 20px);
-}
+/* ── Mood slider ── */
 .slider-container {
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-#mood-display {
-    font-size: 2em;
-    font-weight: bold;
-    color: #4caf50;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 #mood-slider {
-    width: 200px;
+    width: 100%;
+    accent-color: #4CAF50;
 }
+
+#mood-display {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #4CAF50;
+    line-height: 1;
+}
+
+/* ── Comment field ── */
+#daily-tracker-comment {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    min-height: 80px;
+    background-color: #fafafa;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+#daily-tracker-comment:focus {
+    border-color: #4CAF50;
+    background-color: #fff;
+}
+
+/* ── Buttons ── */
+.buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.buttons button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    margin: 0;
+}
+
+#save-button   { background-color: #4CAF50; }
+#cancel-button { background-color: #757575; }
+#delete-button { background-color: #E53935; }
+
+.buttons button:hover { opacity: 0.88; background-color: inherit; }
+
+/* ── Time log labels ── */
+.label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    min-width: 90px;
+}
+
+/* ── Time pickers ── */
 .time-picker-row {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 12px;
 }
 
 .time-picker {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-family: inherit;
     padding: 6px 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     background-color: #fff;
-    transition: border-color 0.3s;
+    transition: border-color 0.2s;
     cursor: pointer;
 }
 
 .time-picker:focus {
-    border-color: #4caf50;
+    border-color: #4CAF50;
     outline: none;
 }
-.label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #4caf50; 
-    margin-right: 10px; 
-    display: inline-block; 
-    vertical-align: middle; 
+
+#sleep-hours {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+    margin: 4px 0 16px;
 }
-/* Hover effect for interactivity */
-.label:hover {
-    color: #2e7d32; 
-    cursor: pointer; 
-}
+
+/* ── Minute inputs ── */
 .time-input-container {
     display: flex;
     align-items: center;
+    gap: 12px;
     margin-bottom: 10px;
 }
+
 .time-input {
-    width: 60px;
-    padding: 5px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 70px;
+    padding: 6px 8px;
+    font-size: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     text-align: center;
-}
-#sleep-hours{
-    color: #4caf50;
-    font-weight: 600;
-    margin-top: 10px;
+    font-family: inherit;
 }
 
-.habits-section {
-    float: left;
-    width: calc(33.33% - 20px);
-    padding: 10px;
+.time-input:focus {
+    border-color: #4CAF50;
+    outline: none;
 }
 
+/* ── Habits section ── */
 .habits-section-header {
     display: flex;
     align-items: baseline;
@@ -154,15 +171,14 @@
 .habit-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 16px 0;
+    margin: 0;
 }
 
 .habit-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .habit-label {
@@ -174,16 +190,30 @@
 }
 
 .habit-checkbox {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     cursor: pointer;
+    accent-color: #4CAF50;
 }
 
 .habit-name {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .habit-name.completed {
     text-decoration: line-through;
     color: #aaa;
+}
+
+/* ── Date title ── */
+.titlediv {
+    margin-bottom: 20px;
+}
+
+.titlediv h5 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }

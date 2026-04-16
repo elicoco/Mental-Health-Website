@@ -6,6 +6,9 @@
     {% endblock %}
     </title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/basic.css') }}">
     {% block links %}
     {% endblock %}
@@ -74,48 +77,14 @@
         </div>
 
         <footer id="footer_wrap">
-            <!-- Footer -->
-            <div class="footer_menu">
-                <a href="{{ url_for('main') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Home</h1>
-                    </div>
-                </a>
-                <a href="{{ url_for('all_meditations') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Meditations</h1>
-                    </div>
-                </a>
-                <a href="{{ url_for('journal') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Journals</h1>
-                    </div>
-                </a>
-                <a href="{{ url_for('calendar') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Calendar</h1>
-                    </div>
-                </a>
-                <a href="{{ url_for('daily_tracker') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Daily Tracker</h1>
-                    </div>
-                </a>
-                <a href="{{ url_for('logout') }}" class="footer_link">
-                    <div class="footerdivs">
-                        <h1 class="footer_title">Logout</h1>
-                    </div>
-                </a>
-            </div>
-
-            <div class="footer_right">
-                <h4>Contact Support</h4>
-                <p>Email: zenlog.connect@gmail.com</p>
-                <p>Phone No: 07232544654</p>
-            </div>
-
-            <div class="footer_right">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="footer_logo">
+            <span class="footer_brand">Zen Log</span>
+            <div class="footer_links">
+                <a href="{{ url_for('main') }}" class="footer_link">Home</a>
+                <a href="{{ url_for('calendar') }}" class="footer_link">Calendar</a>
+                <a href="{{ url_for('journal') }}" class="footer_link">Journals</a>
+                <a href="{{ url_for('daily_tracker') }}" class="footer_link">Daily Tracker</a>
+                <a href="{{ url_for('all_meditations') }}" class="footer_link">Meditations</a>
+                <a href="{{ url_for('logout') }}" class="footer_link footer_logout">Logout</a>
             </div>
         </footer>
     </div>

@@ -1,53 +1,45 @@
-/* Editable fields */
+/* ── Editable fields ── */
 #journal-title, #journal-content {
-    border: 1px dashed #ccc;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    background-color: #fff;
-}
-#journal-title:focus, #journal-content:focus {
-    border-color: #fbc02d;
-    background-color: #fff8e1;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 14px;
+    background-color: #fafafa;
+    font-family: inherit;
+    transition: border-color 0.2s, background-color 0.2s;
     outline: none;
 }
-/* Button styles */
+
+#journal-title:focus, #journal-content:focus {
+    border-color: #4CAF50;
+    background-color: #fff;
+}
+
+/* ── Buttons ── */
 .buttons button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#save-button {
-    background-color: #45a049;
-}
-
-#cancel-button {
-    background-color: #f44336;
-}
-
-#delete-button {
-    background-color: #d32f2f;
-}
-
-#prompt-button {
-    background-color: #fbc02d;
-    color: black;
+    margin-right: 8px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: opacity 0.2s;
 }
 
 .buttons button:hover {
-    opacity: 0.9;
+    opacity: 0.88;
+    background-color: inherit;
+    transform: none;
 }
 
-/* Journal date */
+#save-button    { background-color: #4CAF50; color: white; }
+#cancel-button  { background-color: #757575; color: white; }
+#delete-button  { background-color: #E53935; color: white; }
+#prompt-button  { background-color: #F9A825; color: #333; }
+
+/* ── Date ── */
 #journal-date {
-    font-size: 14px;
-    color: #666;
-    margin-top: 20px;
+    font-size: 13px;
+    color: #888;
+    margin-top: 16px;
     text-align: right;
 }

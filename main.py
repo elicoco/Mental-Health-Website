@@ -26,7 +26,7 @@ app.config['SESSION_PERMANENT'] = False
 app.config['WTF_CSRF_TIME_LIMIT'] = None
 Session(app)
 csrf = CSRFProtect(app)
-limiter = Limiter(get_remote_address, app=app, default_limits=[])
+limiter = Limiter(get_remote_address, app=app, default_limits=[], storage_uri="memory://")
 Compress(app)
 green = "#4CAF50"
 red = "#F44336"

@@ -1,212 +1,217 @@
-/* General reset */
+:root {
+    --green:        #4CAF50;
+    --green-dark:   #388e3c;
+    --red:          #E53935;
+    --amber:        #F9A825;
+    --bg:           #f4f4f9;
+    --surface:      #ffffff;
+    --text:         #333333;
+    --text-muted:   #666666;
+    --border:       #e0e0e0;
+    --radius:       8px;
+    --font:         'Inter', 'Segoe UI', sans-serif;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
-/* Ensure the html take the full height */
-html {
-    height: 100%; /* Required to enable full height layout */
-    margin: 0; /* Remove default margins */
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
+
+html, body {
+    height: 100%;
 }
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9; /* Lighter background for a cleaner feel */
-    color: #333;
+    font-family: var(--font);
+    background-color: var(--bg);
+    color: var(--text);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure body stretches to full viewport height */
-    position: relative; /* Added to allow positioning of elements */
-    height: 100%; /* Required to enable full height layout */
-    margin: 0; /* Remove default margins */
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    min-height: 100vh;
 }
 
-/* Header Styles */
+/* ── Header ── */
 #header_wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px; /* Adds space under the header */
+    background-color: var(--surface);
+    padding: 12px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
 }
 
 .leftheader img {
-    width: 100px;
+    width: 90px;
     height: auto;
 }
 
 .header_menu {
     display: flex;
-    gap: 30px;
+    gap: 24px;
     margin-left: auto;
+    align-items: center;
 }
 
 .header_link {
     text-decoration: none;
-    color: #333;
-    font-size: 18px;
-    font-weight: 600;
-    transition: color 0.3s;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .header_link:hover {
-    color: #4CAF50; /* Green hover effect */
+    color: var(--green);
 }
 
 .headerdiv {
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 
 .header_title {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 6px 0;
 }
 
 .profile_pic {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 2px solid #ddd;
+    border: 2px solid var(--border);
     object-fit: cover;
 }
-/* Main content area */
+
+/* ── Main content ── */
 #main_page {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    padding: 24px;
     flex-grow: 1;
 }
-/* Page container takes full height */
+
 #page_container {
     display: flex;
-    flex-direction: column; /* Ensure children are stacked vertically */
-    min-height: 100vh; /* Full height of viewport */
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 16px;
 }
 
-/* Footer Styles */
+/* ── Footer ── */
 #footer_wrap {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
-    flex-shrink: 0; /* Prevent the footer from shrinking */
-    width: 100%;
+    justify-content: space-between;
+    background-color: var(--surface);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-top: 24px;
+    flex-shrink: 0;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-.footer_menu {
+.footer_brand {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--green);
+    letter-spacing: 0.02em;
+}
+
+.footer_links {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .footer_link {
     text-decoration: none;
-    color: #333;
-    font-size: 18px;
-    font-weight: 600;
-    transition: color 0.3s;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .footer_link:hover {
-    color: #4CAF50; /* Green hover effect */
+    color: var(--green);
 }
 
-.footerdivs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.footer_logout {
+    color: var(--red);
 }
 
-.footer_title {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
+.footer_logout:hover {
+    color: #b71c1c;
 }
 
-.footer_right {
-    text-align: right;
-    font-size: 14px;
-    color: #888;
-}
-
-.footer_logo {
-    width: 50px;
-    height: auto;
-}
-
-/* Optional button styles */
+/* ── Buttons ── */
 button {
-    padding: 12px 25px;
-    background-color: #4CAF50;
+    padding: 10px 22px;
+    background-color: var(--green);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius);
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
+    font-size: 15px;
+    font-family: var(--font);
+    font-weight: 500;
+    transition: background-color 0.2s, opacity 0.2s;
 }
 
 button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px); /* Adds a subtle floating effect */
+    background-color: var(--green-dark);
 }
 
 button:active {
-    transform: translateY(0); /* Removes floating effect on click */
+    opacity: 0.85;
 }
-/* Links */
+
+/* ── Links ── */
 a {
     text-decoration: none;
-    color: #333;
+    color: var(--text);
 }
 
 a:hover {
-    color: #4CAF50;
+    color: var(--green);
 }
 
+/* ── Ghost text on contenteditable ── */
 [contenteditable][data-placeholder]:empty:before {
     content: attr(data-placeholder);
     color: #aaa;
     pointer-events: none;
 }
 
+/* ── Track today banner ── */
 #track-today-banner {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
     background-color: #FFF9C4;
-    border: 1px solid #F9A825;
-    border-radius: 8px;
-    padding: 16px 24px;
-    margin: 24px auto;
+    border: 1px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 14px 24px;
+    margin: 16px auto;
     max-width: 500px;
-    font-size: 16px;
+    font-size: 15px;
     color: #5D4037;
 }
 
 #track-today-banner a {
-    background-color: #F9A825;
+    background-color: var(--amber);
     color: white;
     padding: 8px 18px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
+    border-radius: var(--radius);
+    font-weight: 600;
     white-space: nowrap;
 }
 

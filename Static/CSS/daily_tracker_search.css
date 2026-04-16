@@ -1,127 +1,100 @@
-/* General Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-}
-
-/* Main container for Journals - Flexbox for horizontal layout */
 .daily_tracker-container {
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap into multiple lines */
-    gap: 40px; /* Space between each daily_tracker */
+    flex-wrap: wrap;
+    gap: 24px;
     margin: 20px auto;
-    max-width: 1200px; /* Max width for the layout */
+    max-width: 1100px;
     width: 90%;
-    box-sizing: border-box;
 }
 
-/* Individual Journal Card Styling */
 .daily_tracker-loop {
-    background: #ffffff; /* White background */
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     padding: 20px;
-    width: 30%; /* Set width to 30% to allow 3 items per row */
-    box-sizing: border-box;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 30%;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover Effect for Journals */
 .daily_tracker-loop:hover {
-    transform: scale(1.02); /* Slight zoom effect */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Darker shadow */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
 }
 
-/* Journal Titles */
 .daily_tracker-loop h1 {
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: 600;
     color: #333;
-    margin: 0 0 10px 0;
+    margin: 0 0 6px 0;
 }
 
-/* Journal Dates */
 .daily_tracker-loop p {
-    font-size: 14px;
-    color: #777;
-    margin: 0 0 20px 0;
+    font-size: 13px;
+    color: #888;
+    margin: 0 0 16px 0;
 }
 
-/* Edit Journal Link (no button style) */
 .daily_tracker-loop a.edit-link {
-    font-size: 16px;
-    color: #45a049; /* Green text */
-    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4CAF50;
 }
 
-/* Edit Link Hover */
 .daily_tracker-loop a.edit-link:hover {
     text-decoration: underline;
-    color: #388e3c; /* Darker green on hover */
+    color: #388e3c;
+}
+
+.comment-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 #new-daily_tracker-btn {
-    height: 50px;
-    background-color: #45a049; /* Green */
+    display: inline-block;
+    background-color: #4CAF50;
     color: white;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
     text-decoration: none;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s;
 }
 
-/* New Journal Button Hover */
 #new-daily_tracker-btn:hover {
-    background-color: #388e3c; /* Darker green */
+    background-color: #388e3c;
+    color: white;
 }
 
 #graph-btn {
-    height: 50px;
-    background-color: #45a049; /* Green */
+    display: inline-block;
+    background-color: #4CAF50;
     color: white;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
     text-decoration: none;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s;
     float: right;
 }
 
-/* New Journal Button Hover */
 #graph-btn:hover {
-    background-color: #388e3c; /* Darker green */
+    background-color: #388e3c;
+    color: white;
 }
 
-/* Responsive Design for smaller screens */
 @media (max-width: 768px) {
-    .daily_tracker-loop {
-        width: 48%; /* 2 items per row on smaller screens */
-    }
-
-    #new-daily_tracker-btn {
-        font-size: 16px;
-        padding: 10px 16px;
-    }
+    .daily_tracker-loop { width: 46%; }
+    #new-daily_tracker-btn { font-size: 14px; }
 }
 
 @media (max-width: 480px) {
-    .daily_tracker-loop {
-        width: 100%; /* 1 item per row on very small screens */
-    }
+    .daily_tracker-loop { width: 100%; }
 }
-.comment-preview {
-    display: -webkit-box;
-    display: box; 
-    -webkit-line-clamp: 1; 
-    line-clamp: 1; 
-    -webkit-box-orient: vertical;
-    box-orient: vertical; 
-    overflow: hidden;  
-    text-overflow: ellipsis;  
-    white-space: normal; 
-}
-

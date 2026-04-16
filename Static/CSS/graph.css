@@ -1,28 +1,37 @@
-#graph-div{
+#graph-div {
     width: 60%;
 }
+
+#graph-buttons {
+    padding: 16px 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 #graph-btn {
-    height: 50px;
-    background-color: #45a049; /* Green */
+    display: inline-block;
+    background-color: #4CAF50;
     color: white;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
     text-decoration: none;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s;
+    float: right;
 }
-/* New Journal Button Hover */
+
 #graph-btn:hover {
-    background-color: #388e3c; /* Darker green */
+    background-color: #388e3c;
+    color: white;
 }
-#graph-buttons{
-    padding: 20px;
-}
+
 .correlation-text {
-    font-size: 1.2em;
+    font-size: 1.1rem;
     font-weight: 500;
     color: #333;
     text-align: center;
     margin-top: 20px;
+    line-height: 1.6;
 }

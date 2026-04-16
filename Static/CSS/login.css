@@ -1,73 +1,61 @@
-/* Login Container Styles */
 .login-container {
-    font-weight: bold;
     background-color: #fff;
-    padding: 30px;
+    padding: 32px;
     border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
     width: 100%;
-    max-width: 550px; /* Ensures the form doesn't stretch too wide */
-    text-align: center;
-    margin: 0px auto; /* Center horizontally and vertically with auto and margin */ 
-}
-/* Position login button to top-right */
-#login_button {
-    position: absolute;
-    top: 15px;
-    right: 30px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
+    max-width: 420px;
+    margin: 0 auto;
 }
 
-#login_button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px); /* Adds a subtle floating effect */
-}
-
-#login_button:active {
-    transform: translateY(0); /* Removes floating effect on click */
-}
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
-/* Signup Button Styles */
-.signup-container {
-    margin-top: 20px;
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
 }
-#signup_button {
-    text-decoration: none;
-    color: #4CAF50;
-    font-size: 16px;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-#signup_button:hover {
-    color: #45a049;
-}
-#signup_text {
-    margin: 0;
-    font-size: 18px;
-}
-/* Form input styles */
+
 input[type="text"],
 input[type="password"] {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
+
 input[type="text"]:focus,
 input[type="password"]:focus {
     border-color: #4CAF50;
     outline: none;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
+}
+
+.signup-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#signup_button {
+    text-decoration: none;
+    color: #4CAF50;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#signup_button:hover {
+    color: #388e3c;
+}
+
+#signup_text {
+    margin: 0;
+    font-size: 15px;
 }

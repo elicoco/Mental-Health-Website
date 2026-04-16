@@ -12,7 +12,8 @@ Daily Tracker
 <div class="titlediv">
     <h5>{{daily_tracker.date}}</h5>
 </div>
-<div class="div50width">
+<div class="tracker-columns">
+<div class="tracker-col">
     <div class="div50height">
         <div class="slider-container">
             <h2>Mood Score</h2>
@@ -40,8 +41,8 @@ Daily Tracker
     </div>
     <input type="hidden" id="daily-tracker-id" value="{{ daily_tracker.id }}">
 </div>
-<div class="div50width">
-    <h1>Time Log</h1>
+<div class="tracker-col">
+    <h2>Time Log</h2>
     <br>
     {% set bed_h = daily_tracker.bed_time | int %}
     {% set bed_m = ((daily_tracker.bed_time - bed_h) * 60) | round | int %}
@@ -97,9 +98,9 @@ Daily Tracker
             value="{{ daily_tracker.meditation_mins }}"
         />
     </div>
-    
+
 </div>
-<div class="habits-section">
+<div class="tracker-col habits-section">
     <div class="habits-section-header">
         <h2>Habits</h2>
         <a href="{{ url_for('habits_page') }}" class="manage-habits-link">Manage</a>
@@ -124,6 +125,8 @@ Daily Tracker
     <p class="no-habits-msg">No active habits. <a href="{{ url_for('habits_page') }}">Add one</a></p>
     {% endif %}
 </div>
+
+</div><!-- end tracker-columns -->
 
 <script src="{{ url_for('static', filename='JS/daily-tracker-post.js') }}"> </script>
 <script src="{{ url_for('static', filename='JS/habits.js') }}"> </script>
