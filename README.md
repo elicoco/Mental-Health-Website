@@ -1,5 +1,7 @@
 # Zen Log
 
+**Live app: [web-production-31fb1.up.railway.app](https://web-production-31fb1.up.railway.app)**
+
 A personal wellness tracking web app built with Flask and PostgreSQL. Track your daily mood, sleep, exercise, meditation, habits, and journal entries — then explore your patterns through an insights dashboard.
 
 ## Features
@@ -65,3 +67,10 @@ web: gunicorn -w 4 --timeout 60 main:app
 ```
 
 Set the same environment variables from the local setup in the Railway project settings.
+
+## Feedback & Collaboration
+
+If you have feedback, ideas, or want to collaborate, feel free to reach out:
+
+- **Email:** eliyahuycohen@gmail.com
+- **Issues:** Open a [GitHub issue](../../issues) for bugs or feature suggestions
