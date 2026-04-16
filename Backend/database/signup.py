@@ -37,10 +37,10 @@ To verify your email please click the link {BASE_URL}/emailverification/{email_v
                 try:
                     send_email(subject="Verify Email", body=body, to=info.email)
                     snackbar = (Snackbar(need_snackbar=True, colour=green,
-                                         message="Signup Successful, Please Verify Email To Login"))
+                                         message="Welcome to Zen Log! Check your email to verify your address."))
                 except Exception:
-                    snackbar = (Snackbar(need_snackbar=True, colour=orange,
-                                         message="Account created but verification email failed to send, please contact support"))
+                    snackbar = (Snackbar(need_snackbar=True, colour=green,
+                                         message="Account created! Verification email failed to send, you can still use the app."))
         else:
             snackbar = (Snackbar(need_snackbar=True, colour=orange,
                                  message="Password Not Strong Enough, Must Be at least 8 Characters Long and Contain a Symbol, Letter and Number"))

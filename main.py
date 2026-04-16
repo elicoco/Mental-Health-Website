@@ -196,9 +196,10 @@ def signup():
         info_signup = SignupInformation(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
         # calls function to create new user
         snackbar = create_new_user(info_signup)
-        if snackbar.colour == green: 
-            # if signup successful goes to login page
-            return redirect(url_for("login", snackbar_message=snackbar.message,username=info_signup.username,snackbar_colour=green))
+        if snackbar.colour == green:
+            session.clear()
+            session['username'] = info_signup.username
+            return redirect(url_for("main", snackbar_message=snackbar.message))
         else:
             # if signup unsuccessful stays on signup page
             return render_template("signup.html", loggedin=False, snackbar = snackbar, info = info_signup)
@@ -216,11 +217,9 @@ def email_verification(key):
     # calls function to check if key works
     check_if_verified = verify_user_by_email_verification_key(key)
     if check_if_verified:
-        # if works takes to email verified page
-        return render_template("email_verified.html",loggedin=False)
+        return render_template("email_verified.html", loggedin=False)
     else:
-        # if it does not work takes to email not verified page
-        return render_template("email_not_verified.html",loggedin=False)
+        return redirect(url_for("login", snackbar_message="Invalid or expired verification link.", snackbar_colour=orange))
 
 @app.route("/journal")
 def journal():
