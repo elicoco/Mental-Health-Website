@@ -1,0 +1,117 @@
+{% extends "template.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/profile.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<div class="profile-header">
+    <h1>Profile</h1>
+</div>
+
+<div class="profile-grid">
+
+    <!-- Email verification banner -->
+    {% if not email_verified %}
+    <div class="profile-card verification-card">
+        <div class="verification-status unverified">
+            <span class="verification-dot"></span>
+            <span>Email not verified</span>
+        </div>
+        <p class="verification-msg">Verify your email so we can send you updates and reminders.</p>
+        <form action="{{ url_for('resend_verification') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-secondary">Resend verification email</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="profile-card verification-card">
+        <div class="verification-status verified">
+            <span class="verification-dot"></span>
+            <span>Email verified</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Personal info -->
+    <div class="profile-card">
+        <h2>Personal Info</h2>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update_name">
+            <div class="field-row">
+                <div class="field-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" required>
+                </div>
+                <div class="field-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" required>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Email</label>
+                <input type="text" value="{{ user.email }}" disabled>
+            </div>
+            <button type="submit" class="btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Change username -->
+    <div class="profile-card">
+        <h2>Username</h2>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update_username">
+            <div class="field-group">
+                <label>Current Username</label>
+                <input type="text" value="{{ user.username }}" disabled>
+            </div>
+            <div class="field-group">
+                <label>New Username</label>
+                <input type="text" name="new_username" placeholder="Enter new username" required>
+            </div>
+            <button type="submit" class="btn-primary">Update Username</button>
+        </form>
+    </div>
+
+    <!-- Change password -->
+    <div class="profile-card">
+        <h2>Change Password</h2>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update_password">
+            <div class="field-group">
+                <label>Current Password</label>
+                <input type="password" name="current_password" required>
+            </div>
+            <div class="field-group">
+                <label>New Password</label>
+                <input type="password" name="new_password" required>
+            </div>
+            <button type="submit" class="btn-primary">Update Password</button>
+        </form>
+    </div>
+
+    <!-- Danger zone -->
+    <div class="profile-card danger-card">
+        <h2>Danger Zone</h2>
+        <p class="danger-msg">Permanently deletes your account and all your data. This cannot be undone.</p>
+        <form method="POST" action="{{ url_for('profile') }}"
+              onsubmit="return confirm('Are you sure? This will permanently delete your account and all your data.')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="delete_account">
+            <div class="field-group">
+                <label>Confirm with your password</label>
+                <input type="password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="btn-danger">Delete My Account</button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -78,12 +78,29 @@ body {
     padding: 6px 0;
 }
 
+.profile-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .profile_pic {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     border: 2px solid var(--border);
     object-fit: cover;
+}
+
+.profile-unverified-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #F9A825;
+    border-radius: 50%;
+    border: 2px solid #fff;
 }
 
 /* ── Main content ── */

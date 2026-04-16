@@ -57,11 +57,14 @@
                         <div class="headerdiv">
                             <h1 class="header_title">Login</h1>
                         </div>
-                    </a> 
+                    </a>
                 {% else %}
-                    <div class="logintopdiv">
-                        <img src="{{ url_for('static', filename='images/Profile_picture_placeholder.png') }}" alt="Logged In" class="profile_pic">
-                    </div>
+                    <a href="{{ url_for('profile') }}" class="profile-nav-link">
+                        <img src="{{ url_for('static', filename='images/Profile_picture_placeholder.png') }}" alt="Profile" class="profile_pic">
+                        {% if not email_verified %}
+                        <span class="profile-unverified-dot"></span>
+                        {% endif %}
+                    </a>
                 {% endif %}
             </div>
         </div>

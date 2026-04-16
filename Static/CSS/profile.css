@@ -1,0 +1,177 @@
+.profile-header {
+    margin-bottom: 24px;
+}
+
+.profile-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.profile-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+}
+
+.profile-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.profile-card h2 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #999;
+    margin-bottom: 16px;
+}
+
+/* Fields */
+.field-row {
+    display: flex;
+    gap: 16px;
+}
+
+.field-row .field-group {
+    flex: 1;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.field-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.field-group input {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #333;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+
+.field-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.field-group input:disabled {
+    background: #f9f9f9;
+    color: #aaa;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btn-primary:hover { background: #388e3c; }
+
+.btn-secondary {
+    background: none;
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+    padding: 7px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+}
+
+.btn-secondary:hover {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.btn-danger {
+    background: #E53935;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btn-danger:hover { background: #b71c1c; }
+
+/* Verification card */
+.verification-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.verification-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.verification-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.verified .verification-dot   { background: #4CAF50; }
+.verified                      { color: #4CAF50; }
+.unverified .verification-dot { background: #F9A825; }
+.unverified                    { color: #F9A825; }
+
+.verification-msg {
+    font-size: 0.88rem;
+    color: #888;
+    margin: 0;
+}
+
+/* Danger zone */
+.danger-card {
+    border-color: #ffcdd2;
+}
+
+.danger-card h2 {
+    color: #E53935;
+}
+
+.danger-msg {
+    font-size: 0.88rem;
+    color: #888;
+    margin-bottom: 14px;
+}
+
+@media (max-width: 600px) {
+    .field-row { flex-direction: column; gap: 0; }
+}

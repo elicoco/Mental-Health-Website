@@ -15,6 +15,7 @@ from Backend.database.habits import add_habit, delete_habit_permanently, end_hab
 from Backend.database.login import authenticate_user
 from Backend.custom.customclasses import Snackbar, InputLogin, SignupInformation
 from Backend.database.signup import create_new_user, verify_user_by_email_verification_key
+from Backend.database.profile import get_user_profile, update_name, update_username, update_password, resend_verification_email, delete_account
 from Backend.meditations.search_meditations import get_all_meditations, get_meditation_by_id, search_meditation_on_key
 
 load_dotenv()
@@ -32,6 +33,16 @@ green = "#4CAF50"
 red = "#F44336"
 blue = "#2196F3"
 orange = "#FBC02D"
+
+# Inject email_verified into every template for the nav dot
+@app.context_processor
+def inject_email_verified():
+    if 'username' in session:
+        if 'email_verified' not in session:
+            profile = get_user_profile(session['username'])
+            session['email_verified'] = bool(profile.get('email_verified_bool', 0))
+        return {'email_verified': session['email_verified']}
+    return {'email_verified': True}
 
 # function to check if user is in a session
 def require_login():
@@ -217,9 +228,54 @@ def email_verification(key):
     # calls function to check if key works
     check_if_verified = verify_user_by_email_verification_key(key)
     if check_if_verified:
+        session['email_verified'] = True
         return render_template("email_verified.html", loggedin=False)
     else:
         return redirect(url_for("login", snackbar_message="Invalid or expired verification link.", snackbar_colour=orange))
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    if request.method == "POST":
+        action = request.form.get('action')
+        if action == 'update_name':
+            snackbar = update_name(session['username'],
+                                   request.form.get('first_name', ''),
+                                   request.form.get('last_name', ''))
+        elif action == 'update_username':
+            new_username = request.form.get('new_username', '').strip()
+            snackbar = update_username(session['username'], new_username)
+            if snackbar.colour == green:
+                session['username'] = new_username
+                session.pop('email_verified', None)
+        elif action == 'update_password':
+            snackbar = update_password(session['username'],
+                                       request.form.get('current_password', ''),
+                                       request.form.get('new_password', ''))
+        elif action == 'delete_account':
+            snackbar = delete_account(session['username'], request.form.get('confirm_password', ''))
+            if snackbar.colour == green:
+                session.clear()
+                return redirect(url_for('login', snackbar_message="Your account has been deleted."))
+        else:
+            snackbar = Snackbar(need_snackbar=False, colour='', message='')
+        user = get_user_profile(session['username'])
+        return render_template("profile.html", loggedin=True, user=user, snackbar=snackbar)
+    user = get_user_profile(session['username'])
+    return render_template("profile.html", loggedin=True, user=user,
+                           snackbar=Snackbar(need_snackbar=False, colour='', message=''))
+
+@app.route("/profile/resend-verification", methods=["POST"])
+@limiter.limit("1 per 15 minutes")
+def resend_verification():
+    login_redirect = require_login()
+    if login_redirect is not None:
+        return login_redirect
+    snackbar = resend_verification_email(session['username'])
+    user = get_user_profile(session['username'])
+    return render_template("profile.html", loggedin=True, user=user, snackbar=snackbar)
 
 @app.route("/journal")
 def journal():
