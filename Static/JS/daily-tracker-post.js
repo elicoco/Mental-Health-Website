@@ -33,7 +33,8 @@ function saveDailyTracker(silent = false){
         bed_time: getBedTime(),
         exercise_mins: document.getElementById('exercise-mins-input').value || 0,
         productive_mins: document.getElementById('productive-mins-input').value || 0,
-        meditation_mins: document.getElementById('meditation-mins-input').value || 0
+        meditation_mins: document.getElementById('meditation-mins-input').value || 0,
+        mood_note: document.getElementById('mood-note-input').value
     };
     fetch(window.location.href, {
         method: 'POST',
@@ -84,6 +85,11 @@ function showSleepHours(){
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('daily-tracker-comment').addEventListener('input', triggerAutoSave);
     document.getElementById('mood-slider').addEventListener('input', triggerAutoSave);
+    const moodNoteInput = document.getElementById('mood-note-input');
+    moodNoteInput.addEventListener('input', () => {
+        document.getElementById('mood-note-counter').textContent = moodNoteInput.value.length + '/100';
+        triggerAutoSave();
+    });
     document.getElementById('exercise-mins-input').addEventListener('input', triggerAutoSave);
     document.getElementById('productive-mins-input').addEventListener('input', triggerAutoSave);
     document.getElementById('meditation-mins-input').addEventListener('input', triggerAutoSave);

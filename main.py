@@ -85,6 +85,7 @@ def main():
                 'day': d.strftime('%a'),
                 'mood': tracker.mood_score if tracker else None,
                 'tracker_id': tracker.id if tracker else None,
+                'mood_note': tracker.mood_note if tracker else '',
                 'is_today': i == 0
             })
 
@@ -397,21 +398,21 @@ def daily_tracker_id(id):
             # Get JSON data sent from the frontend
             data = request.get_json()
             # Validate incoming data
-            if ("comment" not in data or "mood_score" not in data or "bed_time" not in data or 
-                "wakeup_time" not in data  or "meditation_mins" not in data  or "productive_mins" not in data
-                 or "exercise_mins" not in data):
-                return {"error": "Invalid data format"}, 400     
-            updated_comment = data["comment"]
-            updated_mood_score = data["mood_score"]
-            updated_bed_time = data["bed_time"]
-            updated_wakeup_time = data["wakeup_time"]
-            updated_meditation_mins = data["meditation_mins"]
-            updated_productive_mins = data["productive_mins"]
-            updated_exercise_mins = data["exercise_mins"]
-            # Update daily_tracker in the database
-            update_daily_tracker_by_id(id=id, comment=updated_comment, mood_score=updated_mood_score,
-            bed_time=updated_bed_time,wakeup_time=updated_wakeup_time,meditation_mins=updated_meditation_mins,
-            productive_mins=updated_productive_mins, exercise_mins=updated_exercise_mins)
+            if ("comment" not in data or "mood_score" not in data or "bed_time" not in data or
+                "wakeup_time" not in data or "meditation_mins" not in data or "productive_mins" not in data
+                or "exercise_mins" not in data):
+                return {"error": "Invalid data format"}, 400
+            update_daily_tracker_by_id(
+                id=id,
+                comment=data["comment"],
+                mood_score=data["mood_score"],
+                bed_time=data["bed_time"],
+                wakeup_time=data["wakeup_time"],
+                meditation_mins=data["meditation_mins"],
+                productive_mins=data["productive_mins"],
+                exercise_mins=data["exercise_mins"],
+                mood_note=data.get("mood_note", "")
+            )
             return {"message": "Daily Tracker updated successfully"}, 200
         else: # if user is not allowed access to this daily tracker
             return redirect(url_for('daily_tracker', snackbar_message="You do not have access to this Daily Tracker", snackbar_colour=red))

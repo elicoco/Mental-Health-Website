@@ -56,8 +56,8 @@ class Snackbar:
     message: str
 
 class DailyTracker:
-    def __init__(self, id, date, comment="", mood_score=50, bed_time=0, wakeup_time=0, 
-                 meditation_mins=0, productive_mins=0, exercise_mins=0):
+    def __init__(self, id, date, comment="", mood_score=50, bed_time=0, wakeup_time=0,
+                 meditation_mins=0, productive_mins=0, exercise_mins=0, mood_note=""):
         self.id = id
         self.date = date
         self.comment = comment
@@ -67,6 +67,7 @@ class DailyTracker:
         self.meditation_mins = meditation_mins
         self.productive_mins = productive_mins
         self.exercise_mins = exercise_mins
+        self.mood_note = mood_note
     
     def to_dict(self):
         return {

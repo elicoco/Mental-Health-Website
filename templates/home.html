@@ -38,14 +38,14 @@
                         {% if day.mood >= 67 %}mood-high
                         {% elif day.mood >= 34 %}mood-mid
                         {% else %}mood-low{% endif %}"
-                        title="{{ day.mood }}">
+                        >
                     </a>
                     {% endif %}
                 {% else %}
                     {% if day.is_today %}
-                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty today-dot" title="Track today"></a>
+                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty today-dot"></a>
                     {% else %}
-                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty" title="Track this day"></a>
+                    <a href="{{ url_for('display_day', date=day.date) }}" class="week-dot mood-empty"></a>
                     {% endif %}
                 {% endif %}
                 {% if day.mood is not none %}

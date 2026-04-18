@@ -86,6 +86,8 @@ def create_all_tables():
     conn.commit()
     cursor.execute('''ALTER TABLE Habits DROP COLUMN IF EXISTS start_date''')
     conn.commit()
+    cursor.execute("ALTER TABLE Daily_Tracker ADD COLUMN IF NOT EXISTS mood_note TEXT DEFAULT ''")
+    conn.commit()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Habit_Logs
                    (id SERIAL PRIMARY KEY,
                    habit_id INT NOT NULL,

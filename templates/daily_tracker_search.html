@@ -15,7 +15,7 @@ Daily Tracker
 <div class="daily_tracker-container">
     {% for trackers in daily_trackers %}
     <div class="daily_tracker-loop">
-        <h1 class="comment-preview">{{ trackers.comment }}</h1>
+        <h1 class="comment-preview">{{ trackers.mood_note if trackers.mood_note else trackers.date }}</h1>
         <p>{{ trackers.date }}</p>
         <a href="{{ url_for('daily_tracker_id', id=trackers.id) }}" class="edit-link">
             Edit Daily Tracker

@@ -27,7 +27,17 @@ Daily Tracker
                 oninput="updateMoodDisplay(this.value)"
             />
             <span id="mood-display">{{daily_tracker.mood_score}}</span>
-        </div>        
+        </div>
+        <div class="mood-note-container">
+            <input
+                type="text"
+                id="mood-note-input"
+                maxlength="100"
+                placeholder="Highlight of the day"
+                value="{{ daily_tracker.mood_note }}"
+            >
+            <span id="mood-note-counter">{{ daily_tracker.mood_note | length }}/100</span>
+        </div>
     </div>
     <div class="bottomdiv">
         <h2>Comment</h2>
